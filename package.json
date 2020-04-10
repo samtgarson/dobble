@@ -1,0 +1,20 @@
+{
+  "name": "example-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@roomservice/node": "^0.1.1",
+    "@roomservice/react": "^0.4.11",
+    "next": "9.2.0",
+    "react": "16.12.0",
+    "react-dom": "16.12.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
