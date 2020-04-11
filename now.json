@@ -1,4 +1,5 @@
 {
+  "alias": ["dobble.samgarson.com"],
   "env": {
     "ROOM_SERVICE_SECRET": "@dobble_roomservice-secret",
     "SECRET_KEY": "@dobble_secret-key"

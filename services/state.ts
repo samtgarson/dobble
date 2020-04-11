@@ -24,6 +24,7 @@ const useGlobalState = () => {
   }, [])
 
   useEffect(() => {
+    if (!state.token) return
     window.localStorage.setItem('dobble_state', JSON.stringify(state))
   }, [state])
 
