@@ -1,6 +1,6 @@
-import { FunctionComponent, useEffect, useMemo } from "react"
-import {usePresence} from "@roomservice/react"
-import {useThrottle } from '@react-hook/throttle'
+import React, { FunctionComponent, useEffect, useMemo } from "react"
+import { usePresence } from "@roomservice/react"
+import { useThrottle } from '@react-hook/throttle'
 
 type MicesProps = {
   code: string
@@ -31,7 +31,7 @@ const Mices: FunctionComponent<MicesProps> = ({ code, name }) => {
     if (typeof window === 'undefined') return
 
     const _setSize = () => setSize({ w: window.innerWidth, h: window.innerHeight })
-    const _setPosition = ({ pageX: x, pageY: y}: MouseEvent) => setPosition({ x, y, name })
+    const _setPosition = ({ pageX: x, pageY: y }: MouseEvent) => setPosition({ x, y, name })
     window.addEventListener('resize', _setSize)
     window.addEventListener('mousemove', _setPosition)
     _setSize()

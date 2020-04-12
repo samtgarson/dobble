@@ -1,4 +1,4 @@
-import { User } from "./api";
+import { User } from "./api"
 
 export enum GameStatus {
   Open = 'open',
@@ -6,14 +6,11 @@ export enum GameStatus {
   Closed = 'closed'
 }
 
-export interface Player extends User {
-  points: number
-}
-
 export interface Game {
   state: GameStatus
   code: string
+  owner: string
   players: {
-    [id: string]: Player
+    [id: string]: User
   }
 }

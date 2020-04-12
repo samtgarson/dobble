@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios from "axios"
 
 export const createClient = (token: string) => Axios.create({
   headers: {

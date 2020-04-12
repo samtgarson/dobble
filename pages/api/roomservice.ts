@@ -1,5 +1,5 @@
 import RoomService from "@roomservice/node"
-import {AuthMiddleware} from "~/util/middleware/auth"
+import { AuthMiddleware } from "~/util/middleware/auth"
 // import {cookie} from "~/util/middleware/cookies"
 
 const RoomServiceAuth = AuthMiddleware(async (req, res, user) => {

@@ -1,6 +1,6 @@
 import { Game } from "~/types/game"
 import { User } from "~/types/api"
-import { FunctionComponent } from "react"
+import React, { FunctionComponent } from "react"
 
 type RunnerProps = {
   players: Game['players']
@@ -8,7 +8,7 @@ type RunnerProps = {
 }
 
 const Runner: FunctionComponent<RunnerProps> = ({ players, user }) => {
-  return <code>{ JSON.stringify(players) }</code>
+  return <p>✌️ There will be dobble here soon.</p>
 }
 
 export default Runner

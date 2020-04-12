@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import yawg from 'yawg'
-import {AuthMiddleware} from '~/util/middleware/auth'
+import { AuthMiddleware } from '~/util/middleware/auth'
 
 export default AuthMiddleware((req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {

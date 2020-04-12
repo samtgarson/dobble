@@ -1,4 +1,4 @@
-import {NextApiHandler} from "next/dist/next-server/lib/utils"
+import { NextApiHandler } from "next/dist/next-server/lib/utils"
 import jwt from 'jsonwebtoken'
 import { HandlerWithUser, User } from "~/types/api"
 
