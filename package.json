@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx ."
+    "lint": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
+    "test": "jest"
   },
   "dependencies": {
     "@react-hook/throttle": "^1.0.12",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@samtgarson/eslint-config": "^2.2.0",
     "@types/cookie": "^0.3.3",
+    "@types/jest": "^25.2.1",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/node": "^13.11.1",
     "@types/react": "^16.9.34",
@@ -39,6 +41,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
+    "jest": "^25.3.0",
+    "ts-jest": "^25.3.1",
     "typescript": "^3.4.5"
   },
   "eslintConfig": {
@@ -54,6 +58,34 @@
     ],
     "rules": {
       "react/prop-types": 0
+    }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": ".+\\.spec\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "^~/(.+)$": "<rootDir>/$1"
+    },
+    "testPathIgnorePatterns": [
+      "node_modules",
+      ".next",
+      ".now"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
     }
   }
 }

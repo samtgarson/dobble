@@ -6,11 +6,20 @@ export enum GameStatus {
   Closed = 'closed'
 }
 
+export type Card = number[]
+
+export type Deck = Card[]
+
+export type Player = User & {
+  hand: Deck
+}
+
 export interface Game {
   state: GameStatus
   code: string
   owner: string
   players: {
-    [id: string]: User
+    [id: string]: Player
   }
+  stack: Deck
 }

@@ -1,4 +1,4 @@
-[
+export const deck = [
   [
     0,
     1,
