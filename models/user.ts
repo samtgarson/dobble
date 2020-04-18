@@ -1,10 +1,12 @@
 import jwt from 'jsonwebtoken'
-import { User } from "~/types/api"
+import { Deck, Player, FirebasePlayer } from '~/types/game'
 
-export class DobbleUser implements User {
+export class DobbleUser implements Player {
   constructor (
     public id: string,
-    public name: string
+    public name: string,
+    public hand: Deck = [],
+    public online: boolean = true
   ) {}
 
   static fromToken (token: string) {
@@ -15,8 +17,18 @@ export class DobbleUser implements User {
     return new DobbleUser(id, name)
   }
 
+  static deserialize (json: FirebasePlayer) {
+    const { name, id, hand, online } = json
+    return new DobbleUser(id, name, hand.map(c => JSON.parse(c)), online)
+  }
+
   get toJSON () {
-    const { name, id } = this
-    return { name, id }
+    const { name, id, hand, online } = this
+    return { name, id, hand, online }
+  }
+
+  get forFirebase () {
+    const { name, id, hand, online } = this
+    return { name, id, hand: hand.map(c => JSON.stringify(c)), online }
   }
 }

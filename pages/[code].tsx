@@ -10,17 +10,18 @@ import { Title, Button } from 'rbx'
 import Link from 'next/link'
 import { useAsyncFetch } from '~/util/use-async'
 import { Wrapper } from '~/components/util/wrapper'
-import { useChannel } from '@harelpls/use-pusher'
+import { useChannel, usePresenceChannel } from '@harelpls/use-pusher'
 import { useClient } from '~/util/use-client'
 
 type RenderGameProps = {
   game: Game
   user: User
+  players: { [id: string]: any }
 }
-const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user }) => {
+const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players }) => {
   switch (game.state) {
     case GameStatus.Open:
-      return <PreGame user={user} game={game} />
+      return <PreGame user={user} game={game} players={players} />
     case GameStatus.Playing:
       return <Runner game={game} user={game.players[user.id]} />
     default:
@@ -42,6 +43,7 @@ const GamePage = () => {
   const { user } = GlobalState.useContainer()
   const client = useClient()
   const channel = useChannel(`private-${code}`)
+  const { members } = usePresenceChannel(`presence-${code}`)
 
   useEffect(() => {
     if (!channel) return
@@ -72,7 +74,7 @@ const GamePage = () => {
 
   return (
     <Wrapper>
-      <RenderGame game={game} user={user} />
+      <RenderGame game={game} user={user} players={members} />
     </Wrapper>
   )
 }

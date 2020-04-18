@@ -1,6 +1,7 @@
 import { MiddlewareStack } from '~/util/middleware'
 import { DobbleGame } from '~/models/game'
 import { Event } from '~/types/events'
+import { DobbleUser } from '~/models/user'
 
 export default MiddlewareStack(async (req, res) => {
   const { query, db, user, pusher } = req
@@ -17,14 +18,15 @@ export default MiddlewareStack(async (req, res) => {
   }
 
   const updateGame = async () => {
-    const { body } = req
-    if (Object.keys(body) == ['state']) return res.error(400, 'Can only update state')
+    const { body: { state, players = [] } } = req
+    if (!Array.isArray(players) || players.length === 0) return res.error(400, 'Provide at least one player')
 
     try {
       const game = await DobbleGame.fromFirebase(db, code)
-      if (!game.canTransition(body.state, user)) return res.error(400, 'Invalid state transition')
+      if (!game.canTransition(state, user)) return res.error(400, 'Invalid state transition')
 
-      game.transition(body.state)
+      game.addPlayers(players.map(p => new DobbleUser(p.id, p.name)))
+      game.transition(state)
 
       await game.update(db, game.forFirebase)
       await pusher.trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
@@ -42,6 +44,6 @@ export default MiddlewareStack(async (req, res) => {
     case 'PATCH':
       return updateGame()
     default:
-      return res.status(405)
+      return res.error(405, 'Wrong method')
   }
 })

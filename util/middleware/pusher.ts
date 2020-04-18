@@ -22,7 +22,8 @@ const pusher = new Pusher({
 export const PusherMiddleware: DobbleMiddleware = req => {
   const dReq = req as DobbleApiRequest
 
-  dReq.pusher = promisify(pusher, { multiArgs: true })
+  // dReq.pusher = promisify(pusher, { multiArgs: true, exclude: ['authenticate'] })
+  dReq.pusher = pusher
 
   return dReq
 }

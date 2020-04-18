@@ -15,10 +15,12 @@ export type Deck = Card[]
 
 export type Player = User & {
   hand: Deck
+  online?: boolean
 }
 
 export type FirebasePlayer = User & {
   hand: string[]
+  online?: boolean
 }
 
 export interface Game {

@@ -14,11 +14,12 @@ const PusherAuth = MiddlewareStack(async (req, res) => {
       channel_name: channel
     } = req.body
 
-    const auth = req.pusher.authenticate(socketId, channel, {
+    const auth = await req.pusher.authenticate(socketId, channel, {
       user_id: req.user.id,
       // @ts-ignore https://github.com/pusher/pusher-http-node/pull/119
       user_info: req.user
     })
+
     res.status(200).json(auth)
   } catch (e) {
     console.error(e)

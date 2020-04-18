@@ -3,26 +3,27 @@ import { DobbleUser } from "./user"
 import { Dealer } from "~/services/dealer"
 import { Firestore, UpdateData } from "@google-cloud/firestore"
 
-const deserializePlayers = (ps: Game['players']): FirebaseGame['players'] => Object.keys(ps)
-  .reduce((hsh, k) => ({ ...hsh, [k]: { ...ps[k], hand: ps[k].hand.map(c => JSON.stringify(c)) } }), {})
+const deserializePlayers = (ps: DobbleGame['players'], firebase = true) => ps
+  .reduce((hsh, u) => ({ ...hsh, [u.id]: firebase ? u.forFirebase : u.toJSON }), {})
 
-const serializePlayers = (ps: FirebaseGame['players']): Game['players'] => Object.keys(ps)
-  .reduce((hsh, k) => ({ ...hsh, [k]: { ...ps[k], hand: ps[k].hand.map(c => JSON.parse(c)) } }), {})
+const serializePlayers = (ps: FirebaseGame['players']): DobbleGame['players'] => Object.values(ps)
+  .map(u => DobbleUser.deserialize(u))
 
-export class DobbleGame implements Game {
+export class DobbleGame {
   constructor (
     public code: string,
     public owner: string,
-    public stack: Deck,
     public state: GameStatus,
-    public players: Game['players']
+    public players: DobbleUser[],
+    public stack: Deck = []
   ) {}
 
   static async fromFirebase (db: Firestore, code: string) {
     const { owner, stack = [], state, players } = (
       await db.collection('games').doc(code).get()
     ).data() as FirebaseGame
-    return new DobbleGame(code, owner, stack.map(c => JSON.parse(c)), state, serializePlayers(players))
+
+    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)))
   }
 
   ownedBy (user: DobbleUser) {
@@ -49,6 +50,10 @@ export class DobbleGame implements Game {
     }
   }
 
+  addPlayers (players: DobbleUser[]) {
+    this.players = players
+  }
+
   update (db: Firestore, data: UpdateData) {
     return db.collection('games')
       .doc(this.code)
@@ -70,7 +75,7 @@ export class DobbleGame implements Game {
 
   get toJSON (): Game {
     const { code, owner, stack, state, players } = this
-    return { code, owner, stack, state, players }
+    return { code, owner, stack, state, players: deserializePlayers(players, false) }
   }
 
   deal () {
@@ -79,8 +84,8 @@ export class DobbleGame implements Game {
     const { firstCard, hands } = dealer.run()
     this.stack = [firstCard]
 
-    Object.keys(this.players).forEach((id, i) => {
-      this.players[id].hand = hands[i]
-    })
+    for (let i=0; i<this.players.length; i++) {
+      this.players[i].hand = hands[i]
+    }
   }
 }

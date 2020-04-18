@@ -1,43 +1,23 @@
 import { Dealer } from './dealer'
-import { Game, GameStatus } from '~/types/game'
-
-type Callback = (state: Game) => void
 
 describe('Dealer', () => {
-  const update = jest.fn<void, [Callback]>()
-  const setupGame: () => Game = () => ({
-    players: {
-      a: { name: 'a', id: 'a', hand: [] },
-      b: { name: 'b', id: 'b', hand: [] },
-      c: { name: 'c', id: 'c', hand: [] }
-    },
-    state: GameStatus.Playing,
-    owner: 'a',
-    code: 'code',
-    stack: []
-  })
-
-  let game: Game
-  let dealer: Dealer
+  let result: ReturnType<Dealer['run']>
 
   beforeEach(() => {
-    game = setupGame()
-    dealer = new Dealer(game, update)
-    dealer.run()
-
-    const [cb] = update.mock.calls[0]
-    cb(game)
+    const dealer = new Dealer(3)
+    result = dealer.run()
   })
 
   it ('leaves one card in the stack', () => {
-    expect(game.stack.length).toEqual(1)
+    expect(result.firstCard).toBeInstanceOf(Array)
   })
 
   it('gives the players cards', () => {
     const lengths = [19, 19, 18]
 
-    Object.values(game.players).forEach((p, i) => {
-      expect(p.hand.length).toEqual(lengths[i])
+    expect(result.hands).toBeInstanceOf(Array)
+    result.hands.forEach((hand, i) => {
+      expect(hand.length).toEqual(lengths[i])
     })
   })
 })
