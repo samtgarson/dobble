@@ -1,8 +1,17 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import yawg from 'yawg'
-import { AuthMiddleware } from '~/util/middleware/auth'
+import { GameStatus, Game } from '~/types/game'
+import { User } from '~/types/api'
+import { MiddlewareStack } from '~/util/middleware'
 
-export default AuthMiddleware((req: NextApiRequest, res: NextApiResponse) => {
+const newGame = (code: string, user: User): Game  => ({
+  code,
+  owner: user.id,
+  players: { [user.id]: { ...user, hand: [] } },
+  state: GameStatus.Open,
+  stack: []
+})
+
+export default MiddlewareStack(async (req, res) => {
   if (req.method !== 'POST') {
     res.statusCode = 405
     return
@@ -14,8 +23,16 @@ export default AuthMiddleware((req: NextApiRequest, res: NextApiResponse) => {
     maxWords: 3,
     delimiter: '-'
   })
+  const game = newGame(code, req.user)
 
-  res.statusCode = 201
-  res.setHeader('Content-Type', 'application/json')
-  res.end(JSON.stringify({ code }))
+  try {
+    await req.db.collection('games')
+      .doc(code)
+      .set(game)
+
+    res.status(201).json(game)
+  } catch (e) {
+    console.error(e)
+    res.error(500, 'Unable to create game')
+  }
 })

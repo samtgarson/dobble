@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import jwt from 'jsonwebtoken'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-  if (!process.env.SECRET_KEY) throw new Error('Missing room service secret')
+  if (!process.env.SECRET_KEY) throw new Error('Missing secret key')
 
   if (req.method !== 'POST') {
     return res.status(403).end()

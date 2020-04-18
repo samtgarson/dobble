@@ -1,38 +1,44 @@
 import { AppProps } from 'next/app'
-import { RoomServiceProvider } from "@roomservice/react"
-import React, { FunctionComponent, ReactElement } from 'react'
+import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher'
+import React, { FunctionComponent } from 'react'
 import Auth from '~/components/auth'
 import { GlobalState } from '~/services/state'
-import whyDidYouRender from '@welldone-software/why-did-you-render'
 import 'rbx/index.css'
 
-if (typeof window !== 'undefined'
-    && process.env.NODE_ENV === 'development'
-    && process.env.DOBBLE_TRACE
-) {
-  whyDidYouRender(React)
+type Headers = { [key: string]: string }
+const createConfig = (headers: Headers): PusherProviderProps => {
+  const clientKey = process.env.PUSHER_KEY
+  const cluster = process.env.PUSHER_CLUSTER
+  if (!clientKey || !cluster) throw new Error('Missing Pusher client creds')
+  return {
+    clientKey,
+    cluster,
+    auth: { headers, params: {} },
+    triggerEndpoint: '/api/publish',
+    authEndpoint: '/api/pusher'
+  }
 }
 
-type AuthWrapperProps = {
-  children: (headers: Headers) => ReactElement
-}
-const AuthWrapper: FunctionComponent<AuthWrapperProps> = ({ children }) => {
+const AuthWrapper: FunctionComponent = ({ children }) => {
   const { token, loaded } = GlobalState.useContainer()
 
   if (!loaded) return <></>
   if (!token) return <Auth />
 
   const headers = { Authorization: token } as unknown as Headers
-  return children(headers) as React.ReactElement
+  const config = createConfig(headers)
+  return (
+    <PusherProvider {...config}>
+          { children }
+    </PusherProvider>
+  )
 }
 
 const App = ({ Component, pageProps }: AppProps) => (
   <GlobalState.Provider>
-    <AuthWrapper>{ headers =>
-      <RoomServiceProvider authUrl={"/api/roomservice"} headers={headers}>
-        <Component {...pageProps} />
-      </RoomServiceProvider>
-    }</AuthWrapper>
+    <AuthWrapper>
+      <Component {...pageProps} />
+    </AuthWrapper>
     <style jsx global>{`
       body {
         min-height: 100vh;
@@ -45,7 +51,8 @@ const App = ({ Component, pageProps }: AppProps) => (
         padding: 20px;
         max-width: 550px;
       }
-    `}</style>
+    `}
+    </style>
   </GlobalState.Provider>
 )
 

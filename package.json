@@ -10,14 +10,16 @@
     "test": "jest"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^3.0.0",
+    "@harelpls/use-pusher": "^4.0.1",
     "@react-hook/throttle": "^1.0.12",
-    "@roomservice/node": "^0.1.1",
-    "@roomservice/react": "^0.4.11",
-    "@welldone-software/why-did-you-render": "^4.0.7",
     "axios": "^0.19.2",
     "cookie": "^0.4.0",
+    "firebase-admin": "^8.10.0",
     "jsonwebtoken": "^8.5.1",
     "next": "^9.3.4",
+    "pify": "github:chinesedfan/pify#add-dts",
+    "pusher": "^3.0.1",
     "rbx": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -57,7 +59,20 @@
       "@samtgarson/eslint-config/typescript"
     ],
     "rules": {
-      "react/prop-types": 0
+      "@typescript-eslint/no-non-null-assertion": 0,
+      "react/prop-types": 0,
+      "react/jsx-wrap-multilines": [
+        "error",
+        {
+          "declaration": "parens-new-line",
+          "assignment": "parens-new-line",
+          "return": "parens-new-line",
+          "arrow": "parens-new-line",
+          "condition": "ignore",
+          "logical": "ignore",
+          "prop": "ignore"
+        }
+      ]
     }
   },
   "jest": {

@@ -1,4 +1,7 @@
 import { User } from "./api"
+import { Omit } from './index'
+
+export type UpdateGame = (cb: (state: Game) => void) => void
 
 export enum GameStatus {
   Open = 'open',
@@ -14,6 +17,10 @@ export type Player = User & {
   hand: Deck
 }
 
+export type FirebasePlayer = User & {
+  hand: string[]
+}
+
 export interface Game {
   state: GameStatus
   code: string
@@ -22,4 +29,11 @@ export interface Game {
     [id: string]: Player
   }
   stack: Deck
+}
+
+export interface FirebaseGame extends Omit<Game, 'stack' | 'players'> {
+  stack: string[]
+  players: {
+    [id: string]: FirebasePlayer
+  }
 }

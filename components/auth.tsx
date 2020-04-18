@@ -2,6 +2,7 @@ import React, { ChangeEvent, FunctionComponent, useState, useCallback, useEffect
 import Axios from 'axios'
 import { GlobalState } from "~/services/state"
 import { Container, Section, Title, Field, Label, Control, Input, Button } from 'rbx'
+import { fi } from "~/util"
 
 const { post } = Axios
 
@@ -23,27 +24,29 @@ const Auth: FunctionComponent = () => {
     dispatch({ user, token })
   }, [name])
 
-  return <Section>
-    <Container>
-      <Title size={1}>Let&apos;s play dobble</Title>
-      <Field>
-        <Label>What should we call you?</Label>
-        <Control loading={loading}>
-          <Input
-            color={invalid ? 'danger' : undefined}
-            type="text"
-            placeholder="Princess Consuela..."
-            disabled={loading}
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-          />
-        </Control>
-      </Field>
-      <Field>
-        <Button state={loading && 'loading'} color='success' onClick={createUser} disabled={loading}>Go</Button>
-      </Field>
-    </Container>
-  </Section>
+  return (
+    <Section>
+      <Container>
+        <Title size={1}>Let&apos;s play dobble</Title>
+        <Field>
+          <Label>What should we call you?</Label>
+          <Control loading={loading}>
+            <Input
+              color={invalid ? 'danger' : undefined}
+              type="text"
+              placeholder="Princess Consuela..."
+              disabled={loading}
+              value={name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            />
+          </Control>
+        </Field>
+        <Field>
+          <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
+        </Field>
+      </Container>
+    </Section>
+  )
 }
 
 export default Auth

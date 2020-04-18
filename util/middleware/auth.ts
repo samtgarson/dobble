@@ -1,21 +1,20 @@
-import { NextApiHandler } from "next/dist/next-server/lib/utils"
-import jwt from 'jsonwebtoken'
-import { HandlerWithUser, User } from "~/types/api"
+import { DobbleApiRequest, DobbleMiddleware } from "~/types/api"
+import { DobbleUser } from '~/models/user'
 
-export const AuthMiddleware = (handler: HandlerWithUser): NextApiHandler => (req, res) => {
-  if (!process.env.SECRET_KEY) throw new Error('Missing room service secret')
-
+export const AuthMiddleware: DobbleMiddleware = (req, res) => {
+  const dReq = req as DobbleApiRequest
   const { authorization: token } = req.headers
 
   if (!token) {
-    return res.status(400).json({ error: 'Authorization token required' })
+    return res.error(400, 'Authorization token required')
   }
 
   try {
-    const user = jwt.verify(token as string, process.env.SECRET_KEY) as User
-    return handler(req, res, user)
+    dReq.user = DobbleUser.fromToken(token)
+    return dReq
   } catch (e) {
-    return res.status(401).json({ error: 'Not authorized' })
+    res.error(401, 'Not authorized')
+    return
   }
 }
 
