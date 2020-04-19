@@ -38,10 +38,12 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players })
 const GamePage = () => {
   const router = useRouter()
   const code = router.query.code as string | undefined
-  const [game, setGame] = useState<Game>()
-  const [err, setErr] = useState(false)
   const { user } = GlobalState.useContainer()
   const client = useClient()
+
+  const [game, setGame] = useState<Game>()
+  const [err, setErr] = useState(false)
+
   const channel = useChannel(`private-${code}`)
   const { members } = usePresenceChannel(`presence-${code}`)
 
@@ -55,15 +57,12 @@ const GamePage = () => {
       const { data } = await client!.get<Game>(`/api/games/${code!}`)
       return data
     },
-    g => setGame(g),
+    g => {
+      if (g) setGame(g)
+      else setErr(true)
+    },
     () => setErr(true),
     [client, code]
-  )
-
-  if (!user || !game) return (
-    <Wrapper>
-      <p>⏳ Loading...</p>
-    </Wrapper>
   )
 
   if (err) return (
@@ -72,11 +71,13 @@ const GamePage = () => {
     </Wrapper>
   )
 
-  return (
+  if (!user || !game) return (
     <Wrapper>
-      <RenderGame game={game} user={user} players={members} />
+      <p>⏳ Loading...</p>
     </Wrapper>
   )
+
+  return <RenderGame game={game} user={user} players={members} />
 }
 
 export default GamePage

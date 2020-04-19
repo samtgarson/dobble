@@ -1,9 +1,10 @@
-import React, { FunctionComponent, useCallback, useMemo, useState, useEffect } from "react"
+import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
 import { Game, GameStatus } from "~/types/game"
 import { User } from "~/types/api"
 import { Tag, Title, Button } from 'rbx'
 import { useClient } from "~/util/use-client"
 import { fi } from '~/util'
+import { Wrapper } from "./util/wrapper"
 
 type PreGameProps = {
   game: Game
@@ -33,7 +34,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   const owner = useMemo(() => game.players[game.owner].name, [game])
 
   return (
-    <>
+    <Wrapper>
       <div>
         { game.owner === user.id
           ? <Button size="large" color="success" state={fi(loading, 'loading')} onClick={startGame}>🚀 Begin Game</Button>
@@ -52,7 +53,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
           margin: 20px 0 50px;
         }
       `}</style>
-    </>
+    </Wrapper>
   )
 }
 

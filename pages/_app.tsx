@@ -40,7 +40,7 @@ const App = ({ Component, pageProps }: AppProps) => (
       <Component {...pageProps} />
     </AuthWrapper>
     <style jsx global>{`
-      body {
+      body, html {
         min-height: 100vh;
         background-color: #fafafa;
       }

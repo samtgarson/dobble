@@ -10,6 +10,7 @@ export default MiddlewareStack(async (req, res) => {
   const getGame = async () => {
     try {
       const game = await DobbleGame.fromFirebase(db, code)
+      if (!game || !game.canPlay(user.id)) return res.error(404, 'Game not found')
       return res.status(201).json(game.toJSON)
     } catch (e) {
       console.log(e)
@@ -23,6 +24,7 @@ export default MiddlewareStack(async (req, res) => {
 
     try {
       const game = await DobbleGame.fromFirebase(db, code)
+      if (!game || !game.canPlay(user.id)) return res.error(404, 'Game not found')
       if (!game.canTransition(state, user)) return res.error(400, 'Invalid state transition')
 
       game.addPlayers(players.map(p => new DobbleUser(p.id, p.name)))

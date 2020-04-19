@@ -19,9 +19,9 @@ export class DobbleGame {
   ) {}
 
   static async fromFirebase (db: Firestore, code: string) {
-    const { owner, stack = [], state, players } = (
-      await db.collection('games').doc(code).get()
-    ).data() as FirebaseGame
+    const game = (await db.collection('games').doc(code).get()).data() as FirebaseGame | undefined
+    if (!game) return
+    const { owner, stack = [], state, players } = game
 
     return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)))
   }
@@ -48,6 +48,13 @@ export class DobbleGame {
       case GameStatus.Playing:
         this.deal()
     }
+  }
+
+  canPlay (id: string): boolean {
+    if (this.state === GameStatus.Open) return true
+    if (this.state === GameStatus.Closed) return false
+
+    return !!(this.players.find(p => p.id === id))
   }
 
   addPlayers (players: DobbleUser[]) {
@@ -78,7 +85,7 @@ export class DobbleGame {
     return { code, owner, stack, state, players: deserializePlayers(players, false) }
   }
 
-  deal () {
+  private deal () {
     const playerCount = Object.values(this.players).length
     const dealer = new Dealer(playerCount)
     const { firstCard, hands } = dealer.run()

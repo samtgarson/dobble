@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { MiddlewareStack } from "~/util/middleware"
+import { DobbleGame } from "~/models/game"
 
 const PusherAuth = MiddlewareStack(async (req, res) => {
   if (req.method !== 'POST') {
@@ -13,6 +14,12 @@ const PusherAuth = MiddlewareStack(async (req, res) => {
       socket_id: socketId,
       channel_name: channel
     } = req.body
+
+    const code = channel.replace(/^(presence|private)-/, '')
+    const game = await DobbleGame.fromFirebase(req.db, code)
+
+    if (!game) return res.error(404, 'Game not found')
+    if (!game.canPlay(req.user.id)) return res.error(403, 'Cannot join game')
 
     const auth = await req.pusher.authenticate(socketId, channel, {
       user_id: req.user.id,
