@@ -5,7 +5,9 @@ import { Deck } from '~/types/game'
 export class Dealer {
   constructor (
     private playerCount: number
-  ) {}
+  ) {
+    if (!playerCount) throw new Error('Not enough players')
+  }
 
   run () {
     const pile = shuffle(deck)

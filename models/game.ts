@@ -44,12 +44,13 @@ export class DobbleGame {
   }
 
   transition (to: GameStatus) {
-    this.state = to
-
     switch (to) {
       case GameStatus.Playing:
         this.deal()
+        this.setStartAt()
     }
+
+    this.state = to
   }
 
   canPlay (id: string): boolean {
@@ -103,9 +104,12 @@ export class DobbleGame {
     for (let i=0; i < this.players.length; i++) {
       this.players[i].hand = hands[i]
     }
+  }
 
+  private setStartAt () {
     const startAt = new Date()
     startAt.setSeconds(startAt.getSeconds() + 5)
     this.startAt = startAt.toISOString()
   }
+
 }

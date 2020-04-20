@@ -31,7 +31,12 @@ export default MiddlewareStack(async (req, res) => {
       game.transition(state)
 
       await game.update(db, game.forFirebase)
-      await pusher.trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
+      await new Promise((resolve, reject) => pusher.trigger(
+        `private-${game.code}`,
+        Event.StateUpdated,
+        game.toJSON,
+        err => err ? reject(err) : resolve()
+      ))
 
       return res.status(200).json(game.toJSON)
     } catch (e) {

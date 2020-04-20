@@ -2,15 +2,16 @@
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const path = require('path')
 const withPlugins = require('next-compose-plugins')
-const sourcemaps = require('@zeit/next-source-maps')
+const sourcemaps = require('@zeit/next-source-maps')()
 
 const { PUSHER_KEY, PUSHER_CLUSTER } = process.env
+
 module.exports = withPlugins(
   [
     [sourcemaps]
   ],
   {
-    webpack: config => {
+    webpack (config) {
       config.resolve.alias['~'] = path.resolve(__dirname) + "/"
       return config
     },

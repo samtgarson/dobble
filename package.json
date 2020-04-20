@@ -23,6 +23,7 @@
     "rbx": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "source-map-support": "^0.5.17",
     "unstated-next": "^1.1.0",
     "uuid": "^7.0.3",
     "yawg": "^1.2.3"
@@ -37,7 +38,7 @@
     "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
-    "@zeit/next-source-maps": "0.0.3",
+    "@zeit/next-source-maps": "0.0.4-canary.1",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.2",
