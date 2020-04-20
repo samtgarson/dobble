@@ -10,6 +10,8 @@ const serializePlayers = (ps: FirebaseGame['players']): DobbleGame['players'] =>
   .map(u => DobbleUser.deserialize(u))
 
 export class DobbleGame {
+  public startAt: string | null = null
+
   constructor (
     public code: string,
     public owner: string,
@@ -72,17 +74,24 @@ export class DobbleGame {
   }
 
   get forFirebase (): FirebaseGame {
-    const { stack, players, ...attrs } = this
+    const { stack, ...attrs } = this.toJSON
     return {
       ...attrs,
       stack: stack.map(c => JSON.stringify(c)),
-      players: deserializePlayers(players)
+      players: deserializePlayers(this.players)
     }
   }
 
   get toJSON (): Game {
-    const { code, owner, stack, state, players } = this
-    return { code, owner, stack, state, players: deserializePlayers(players, false) }
+    const { code, owner, stack, state, players, startAt } = this
+    return {
+      code,
+      owner,
+      stack,
+      state,
+      startAt,
+      players: deserializePlayers(players, false)
+    }
   }
 
   private deal () {
@@ -91,8 +100,12 @@ export class DobbleGame {
     const { firstCard, hands } = dealer.run()
     this.stack = [firstCard]
 
-    for (let i=0; i<this.players.length; i++) {
+    for (let i=0; i < this.players.length; i++) {
       this.players[i].hand = hands[i]
     }
+
+    const startAt = new Date()
+    startAt.setSeconds(startAt.getSeconds() + 5)
+    this.startAt = startAt.toISOString()
   }
 }

@@ -31,6 +31,7 @@ export interface Game {
     [id: string]: Player
   }
   stack: Deck
+  startAt: string | null
 }
 
 export interface FirebaseGame extends Omit<Game, 'stack' | 'players'> {

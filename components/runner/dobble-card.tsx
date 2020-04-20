@@ -1,15 +1,16 @@
 import React, { FunctionComponent, useMemo } from 'react'
 import { Card } from '~/types/game'
-import { fi, shuffle } from '~/util'
+import { shuffle } from '~/util'
 import { DobbleIcon } from './dobble-icon'
 
 type DobbleCardProps = {
   card: Card
-  faceup: boolean
+  faceup?: boolean
   size?: string
+  backText?: string
 }
 
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = false, size }) => {
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = false, size, backText }) => {
   const shuffledCard = useMemo(() => shuffle(card), [card])
   return (
     <div className={`dobble-card ${faceup ? 'faceup' : ''} ${size ? size : ''}`}>
@@ -17,7 +18,7 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = 
         { shuffledCard.map((index, i) => <DobbleIcon key={index} symbolIndex={index} cardIndex={i} />) }
       </div>
       <div className="card-back">
-        <span>Dobble!</span>
+        <span>{ backText || 'Dobble!' }</span>
       </div>
       <style jsx>{`
         .dobble-card {
