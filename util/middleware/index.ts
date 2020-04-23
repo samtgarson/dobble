@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import { DobbleApiHandler, DobbleApiRequest, DobbleApiResponse } from "~/types/api"
 import { AuthMiddleware } from './auth'
 import { DatabaseMiddleware } from './db'

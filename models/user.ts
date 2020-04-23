@@ -28,7 +28,7 @@ export class DobbleUser implements Player {
   }
 
   get forFirebase () {
-    const { name, id, hand, online } = this
-    return { name, id, hand: hand.map(c => JSON.stringify(c)), online }
+    const { hand = [], ...attrs } = this.toJSON
+    return { ...attrs, hand: hand.map(c => JSON.stringify(c)) }
   }
 }
