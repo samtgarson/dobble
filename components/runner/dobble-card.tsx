@@ -35,9 +35,9 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = 
       <style jsx>{`
         .dobble-card {
           width: 400px;
-          max-width: 90vw;
+          max-width: min(90vw, 47.5vh);
           height: 400px;
-          max-height: 90vw;
+          max-height: min(90vw, 47.5vh);
           margin: 0 auto;
           position: relative;
           transform: rotateY(180deg);
@@ -62,6 +62,10 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = 
           top: 0;
           width: 100%;
           height: 100%;
+        }
+
+        .dobble-card.small {
+          margin: -15px auto;
         }
 
         .dobble-card.small .card-front {

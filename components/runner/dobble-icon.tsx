@@ -28,7 +28,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
 
     // create two random numbers
     const sizeSeed = inner
-      ? generateSeed(0.7, 1) // size only varies a little
+      ? generateSeed(0.6, 0.9) // size only varies a little
       : generateSeed(0.8, 1.2) // (and outer ring should be bigger)
     const angleSeed = generateSeed(0.2, 1.8) // angle can vary a lot
     return { angle, h, angleSeed, sizeSeed }
@@ -60,12 +60,12 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
 
       <style jsx>{`
         .dobble-icon {
-          font-size: 16vw;
+          font-size: min(16vw, 9vh);
           position: absolute;
           display: block;
           transform-origin: bottom center;
           left: 50%;
-          margin-left: -6%;
+          margin-left: -10%;
           line-height: 1em;
           pointer-events: none;
         }
@@ -81,7 +81,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
 
         @media (min-width: 444px) {
           .dobble-icon {
-            font-size: 72px;
+            font-size: 68px;
           }
         }
 

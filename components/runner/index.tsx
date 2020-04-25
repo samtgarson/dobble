@@ -3,6 +3,7 @@ import { User } from "~/types/api"
 import React, { FunctionComponent, useMemo, useEffect, useState, useCallback } from "react"
 import { DobbleCard } from "./dobble-card"
 import { useClient } from "~/util/use-client"
+import { Scoreboard } from "./scoreboard"
 
 type RunnerProps = {
   game: Game
@@ -17,7 +18,7 @@ const getTimeLeft = (dateStr: Game['startAt']) => {
 }
 
 const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
-  const hand = useMemo(() => game.players[user.id].hand, [game, user])
+  const hand = useMemo(() => game.players[user.id].hand[0], [game, user])
   const deck = useMemo(() => game.stack[game.stack.length - 1], [game])
   const [timeLeft, setTimeLeft] = useState(getTimeLeft(game.startAt))
   const client = useClient()
@@ -32,23 +33,22 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
   }, [timeLeft])
 
   const match = useMemo(() => (
-    hand[0].find(i => deck.includes(i))
+    hand.find(i => deck.includes(i))
    ), [game, hand])
 
   const handleChoice = useCallback(async (index: number) => {
     if (!client || index !== match) return false
-    await client.post(`/api/games/${game.code}/moves`, { match: index })
+    await client.post(`/api/games/${game.code}/moves`, { match: index, deck, hand })
     return true
-  }, [match])
+  }, [match, deck, hand])
 
   if (!hand.length) return <p>Dealing...</p>
 
   return (
     <div className='game'>
       <DobbleCard card={deck} size='small' faceup={true} />
-      <DobbleCard card={hand[0]} backText={backText} faceup={!backText} handleChoice={handleChoice}/>
-      <style jsx>{`
-      `}</style>
+      <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice}/>
+      <Scoreboard players={Object.values(game.players)} />
     </div>
   )
 }

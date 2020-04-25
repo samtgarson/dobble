@@ -39,20 +39,6 @@ const App = ({ Component, pageProps }: AppProps) => (
     <AuthWrapper>
       <Component {...pageProps} />
     </AuthWrapper>
-    <style jsx global>{`
-      body, html {
-        min-height: 100vh;
-        background-color: #fafafa;
-      }
-
-      .container {
-        border-radius: 10px;
-        background-color: white;
-        padding: 20px;
-        max-width: 550px;
-      }
-    `}
-    </style>
   </GlobalState.Provider>
 )
 

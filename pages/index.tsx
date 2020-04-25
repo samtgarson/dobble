@@ -26,13 +26,16 @@ const Index = () => {
   }, [client])
 
   const goToGame = useCallback(
-    code => Router.push(`/${code}`),
-    []
+    code => {
+      if (!code) return
+      setLoading(true)
+      Router.push(`/${code}`)
+    }, []
   )
 
   return (
     <Wrapper>
-      <Title size={1}>Let&apos;s play dobble</Title>
+      <Title size={2}>Dobble</Title>
       <div className="begin-option">
         <Label>Already got a game code?</Label>
         <Field kind="group">
@@ -46,7 +49,7 @@ const Index = () => {
             />
           </Control>
           <Control>
-            <Button state={fi(loading, 'loading')} onClick={() => goToGame(code)}>Join Game</Button>
+            <Button state={fi(loading, 'loading')} onClick={() => goToGame(code)}>Join</Button>
           </Control>
         </Field>
       </div>
@@ -59,14 +62,7 @@ const Index = () => {
       </div>
       <style jsx>{`
       .begin-option {
-        padding: 20px;
-        border-radius: 5px;
         margin-bottom: 20px;
-        border: 1px solid #fafafa;
-      }
-
-      .begin-option:hover {
-        background-color: #fafafa;
       }
       `}</style>
     </Wrapper>
