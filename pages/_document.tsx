@@ -37,6 +37,7 @@ class DobbleDocument extends Document {
             }
           `}
           </style>
+          <script src="https://cdn.usefathom.com/3.js" site="KPUWCNUE"></script>
         </body>
       </Html>
     )
