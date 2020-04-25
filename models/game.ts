@@ -74,6 +74,11 @@ export class DobbleGame {
     return DobbleGame.fromFirebase(db, this.code)
   }
 
+  replacePlayer (player: DobbleUser) {
+    const i = this.players.findIndex(p => p.id === player.id)
+    this.players.splice(i, 1, player)
+  }
+
   get forFirebase (): FirebaseGame {
     const { stack, ...attrs } = this.toJSON
     return {

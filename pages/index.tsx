@@ -36,9 +36,10 @@ const Index = () => {
       <div className="begin-option">
         <Label>Already got a game code?</Label>
         <Field kind="group">
-          <Control loading={loading} expanded>
+          <Control expanded>
             <Input
               type="text"
+              disabled={loading}
               placeholder="Your game code"
               value={code}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}

@@ -28,9 +28,9 @@ const Auth: FunctionComponent = () => {
     <Section>
       <Container>
         <Title size={1}>Let&apos;s play dobble</Title>
-        <Field>
-          <Label>What should we call you?</Label>
-          <Control loading={loading}>
+        <Label>What should we call you?</Label>
+        <Field kind="group">
+          <Control loading={loading} expanded>
             <Input
               color={invalid ? 'danger' : undefined}
               type="text"
@@ -40,9 +40,9 @@ const Auth: FunctionComponent = () => {
               onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             />
           </Control>
-        </Field>
-        <Field>
-          <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
+          <Control>
+            <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
+          </Control>
         </Field>
       </Container>
     </Section>

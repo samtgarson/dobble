@@ -4,7 +4,7 @@ import { Event } from '~/types/events'
 import { DobbleUser } from '~/models/user'
 
 export default MiddlewareStack(async (req, res) => {
-  const { query, db, user, pusher } = req
+  const { query, db, user, trigger } = req
   const { code } = query as { code: string }
 
   const getGame = async () => {
@@ -31,12 +31,7 @@ export default MiddlewareStack(async (req, res) => {
       game.transition(state)
 
       await game.update(db, game.forFirebase)
-      await new Promise((resolve, reject) => pusher.trigger(
-        `private-${game.code}`,
-        Event.StateUpdated,
-        game.toJSON,
-        err => err ? reject(err) : resolve()
-      ))
+      await trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
 
       return res.status(200).json(game.toJSON)
     } catch (e) {

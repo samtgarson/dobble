@@ -1,6 +1,5 @@
 import { DobbleApiRequest, DobbleMiddleware } from "~/types/api"
 import Pusher from 'pusher'
-import promisify from 'pify'
 
 const {
   PUSHER_APP_ID: appId,
@@ -22,8 +21,11 @@ const pusher = new Pusher({
 export const PusherMiddleware: DobbleMiddleware = req => {
   const dReq = req as DobbleApiRequest
 
-  // dReq.pusher = promisify(pusher, { multiArgs: true, exclude: ['authenticate'] })
   dReq.pusher = pusher
+  dReq.trigger = (channel, eventName, body) => new Promise((resolve, reject) => (
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
+    pusher.trigger(channel, eventName, body, err => err ? reject(err) : resolve())
+  ))
 
   return dReq
 }
