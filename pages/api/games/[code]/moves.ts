@@ -36,11 +36,12 @@ export default MiddlewareStack(async (req, res) => {
       return res.error(422, 'Not a match')
     }
 
-    game.replacePlayer(player)
+    game.updatePlayer(player)
     game.stack.push(playerCard)
+
     await Promise.all([
-      game.update(db, game.forFirebase),
-      trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
+      trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON),
+      game.update(db, game.forFirebase)
     ])
 
     return res.status(201).end()

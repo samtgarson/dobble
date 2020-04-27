@@ -6,12 +6,11 @@ import { GlobalState } from '~/services/state'
 import Runner from '~/components/runner'
 import PreGame from '~/components/pre-game'
 import { User } from '~/types/api'
-import { Title, Button } from 'rbx'
-import Link from 'next/link'
 import { useAsyncFetch } from '~/util/use-async'
 import { Wrapper } from '~/components/util/wrapper'
 import { useChannel, usePresenceChannel } from '@harelpls/use-pusher'
 import { useClient } from '~/util/use-client'
+import { FinishedGame } from '~/components/finished-game'
 
 type RenderGameProps = {
   game: Game
@@ -24,12 +23,13 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players })
       return <PreGame user={user} game={game} players={players} />
     case GameStatus.Playing:
       return <Runner game={game} user={game.players[user.id]} />
+    case GameStatus.Finished:
+      return <FinishedGame game={game} user={user} />
     default:
       return (
-        <>
-          <Title size={1}>Game not found 🤷‍♀️</Title>
-          <Button as={Link} href="/">Back</Button>
-        </>
+        <Wrapper>
+          <p>👀 Couldn&apos;t find that game</p>
+        </Wrapper>
       )
   }
 }

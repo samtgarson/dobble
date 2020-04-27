@@ -27,7 +27,7 @@ const Auth: FunctionComponent = () => {
   return (
     <Section>
       <Container>
-        <Title size={1}>Let&apos;s play dobble</Title>
+        <Title size={3}>👋 Let&apos;s play Dobble!</Title>
         <Label>What should we call you?</Label>
         <Field kind="group">
           <Control loading={loading} expanded>

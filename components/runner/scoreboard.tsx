@@ -3,21 +3,22 @@ import React, { FunctionComponent, useMemo } from "react"
 
 type ScoreboardProps = {
   players: Player[]
+  fixed?: boolean
 }
 
 const medals = ['🥇', '🥈', '🥉']
 
-export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players }) => {
+export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, fixed }) => {
   const scores = useMemo(() => players
-    .map(p => ({ name: p.name, score: p.hand.length }))
+   .map(p => ({ name: p.name, score: p.hand.length, id: p.id }))
     .sort((a, b) => a.score - b.score),
   [players])
 
   return (
-    <div className="scoreboard">
+    <div className={`scoreboard ${fixed ? 'fixed' : undefined}`}>
       <ul>
         {scores.map((s, i) => (
-          <li key={s.name}>
+          <li key={s.id}>
             { (i < 3) && medals[i] }
             <span>{ s.name }</span>
             { s.score }
@@ -25,7 +26,16 @@ export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players }) => {
         ))}
       </ul>
       <style jsx>{`
-        .scoreboard {
+        ul {
+          padding: 0;
+          margin: 0;
+        }
+
+        li {
+          list-style-type: none;
+        }
+
+        .scoreboard.fixed {
           position: fixed;
           bottom: 0;
           left: 0;
@@ -37,13 +47,13 @@ export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players }) => {
           color: white;
         }
 
-        ul {
+        .fixed ul {
           flex: 0 1 auto;
           display: flex;
           justify-content: flex-start;
         }
 
-        li {
+        .fixed li {
           flex: 0 0 auto;
           margin-left: 20px;
         }
@@ -51,6 +61,10 @@ export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players }) => {
         span {
           font-weight: bold;
           margin: 0 4px;
+        }
+
+        .scoreboard:not(.fixed) li {
+          margin-bottom: 10px;
         }
       `}</style>
     </div>

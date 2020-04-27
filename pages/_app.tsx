@@ -1,44 +1,38 @@
+import React from 'react'
 import { AppProps } from 'next/app'
-import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher'
-import React, { FunctionComponent } from 'react'
-import Auth from '~/components/auth'
 import { GlobalState } from '~/services/state'
 import 'rbx/index.css'
-
-type Headers = { [key: string]: string }
-const createConfig = (headers: Headers): PusherProviderProps => {
-  const clientKey = process.env.PUSHER_KEY
-  const cluster = process.env.PUSHER_CLUSTER
-  if (!clientKey || !cluster) throw new Error('Missing Pusher client creds')
-  return {
-    clientKey,
-    cluster,
-    auth: { headers, params: {} },
-    triggerEndpoint: '/api/publish',
-    authEndpoint: '/api/pusher'
-  }
-}
-
-const AuthWrapper: FunctionComponent = ({ children }) => {
-  const { token, loaded } = GlobalState.useContainer()
-
-  if (!loaded) return <></>
-  if (!token) return <Auth />
-
-  const headers = { Authorization: token } as unknown as Headers
-  const config = createConfig(headers)
-  return (
-    <PusherProvider {...config}>
-          { children }
-    </PusherProvider>
-  )
-}
+import { AuthWrapper } from '~/components/auth-wrapper'
 
 const App = ({ Component, pageProps }: AppProps) => (
   <GlobalState.Provider>
     <AuthWrapper>
       <Component {...pageProps} />
     </AuthWrapper>
+    <style jsx global>{`
+      body, html {
+        min-height: 100vh;
+        min-height: -webkit-max-available;
+        background-color: #6100d9;
+        font-family: 'Manrope', sans-serif;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 550px;
+        border-radius: 10px;
+        background: white;
+        box-shadow:  20px 20px 60px #5200b8,
+          -20px -20px 60px #7000fa;
+      }
+
+      @media (max-width: 400px) {
+        .container {
+          padding: 10px;
+        }
+      }
+    `}
+    </style>
   </GlobalState.Provider>
 )
 

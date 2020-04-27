@@ -14,29 +14,6 @@ class DobbleDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <style jsx global>{`
-            body, html {
-              min-height: 100vh;
-              background-color: #6100d9;
-              font-family: 'Manrope', sans-serif;
-            }
-
-            .container {
-              padding: 20px;
-              max-width: 550px;
-              border-radius: 10px;
-              background: white;
-              box-shadow:  20px 20px 60px #5200b8,
-                -20px -20px 60px #7000fa;
-            }
-
-            @media (max-width: 400px) {
-              .container {
-                padding: 10px;
-              }
-            }
-          `}
-          </style>
           <script src="https://cdn.usefathom.com/3.js" site="KPUWCNUE"></script>
         </body>
       </Html>

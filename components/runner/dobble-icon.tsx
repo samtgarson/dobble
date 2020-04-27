@@ -19,7 +19,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
     const inner = cardIndex < 3
 
     // distance from center (inner and outer)
-    const h = inner ? 22 : 42
+    const h = inner ? 24 : 44
 
     // pseudo-random looking spread
     const angle = inner
@@ -29,7 +29,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
     // create two random numbers
     const sizeSeed = inner
       ? generateSeed(0.6, 0.9) // size only varies a little
-      : generateSeed(0.8, 1.2) // (and outer ring should be bigger)
+      : generateSeed(0.8, 1.1) // (and outer ring should be bigger)
     const angleSeed = generateSeed(0.2, 1.8) // angle can vary a lot
     return { angle, h, angleSeed, sizeSeed }
   }, [cardIndex])
@@ -81,7 +81,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
 
         @media (min-width: 444px) {
           .dobble-icon {
-            font-size: 68px;
+            font-size: 72px;
           }
         }
 

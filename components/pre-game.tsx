@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
-import { Game, GameStatus } from "~/types/game"
+import { GameStatus, Game } from "~/types/game"
 import { User } from "~/types/api"
 import { Tag, Title, Button } from 'rbx'
 import { useClient } from "~/util/use-client"
@@ -15,12 +15,6 @@ type PreGameProps = {
 const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   const [loading, setLoading] = useState(false)
   const client = useClient()
-
-  /* useEffect(() => { */
-  /*   if (!client) return */
-  /*   if (game.state !== GameStatus.Open) return */
-  /*   if (game.players && game.players[user.id]) return */
-  /* }, [client]) */
 
   const startGame = useCallback(() => {
     if (!client) return

@@ -17,15 +17,17 @@ export class DobbleGame {
     public owner: string,
     public state: GameStatus,
     public players: DobbleUser[],
-    public stack: Deck = []
+    public stack: Deck = [],
+    public winner: string | null = null,
+    public createdAt: Date = new Date()
   ) {}
 
   static async fromFirebase (db: Firestore, code: string) {
     const game = (await db.collection('games').doc(code).get()).data() as FirebaseGame | undefined
     if (!game) return
-    const { owner, stack = [], state, players } = game
+    const { owner, stack = [], state, players, winner, createdAt } = game
 
-    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)))
+    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)), winner, createdAt)
   }
 
   ownedBy (user: DobbleUser) {
@@ -43,11 +45,14 @@ export class DobbleGame {
     }
   }
 
-  transition (to: GameStatus) {
+  transition (to: GameStatus, opts: { winner? : string } = {}): void {
     switch (to) {
       case GameStatus.Playing:
         this.deal()
         this.setStartAt()
+        break
+      case GameStatus.Finished:
+        if (opts.winner) this.winner = opts.winner
     }
 
     this.state = to
@@ -74,9 +79,11 @@ export class DobbleGame {
     return DobbleGame.fromFirebase(db, this.code)
   }
 
-  replacePlayer (player: DobbleUser) {
+  updatePlayer (player: DobbleUser) {
     const i = this.players.findIndex(p => p.id === player.id)
     this.players.splice(i, 1, player)
+
+    if (player.hand.length === 0) this.transition(GameStatus.Finished, { winner: player.id })
   }
 
   get forFirebase (): FirebaseGame {
@@ -89,14 +96,16 @@ export class DobbleGame {
   }
 
   get toJSON (): Game {
-    const { code, owner, stack, state, players, startAt } = this
+    const { code, owner, stack, state, players, startAt, winner, createdAt } = this
     return {
       code,
       owner,
       stack,
       state,
       startAt,
-      players: deserializePlayers(players, false)
+      players: deserializePlayers(players, false),
+      winner,
+      createdAt
     }
   }
 
@@ -116,5 +125,4 @@ export class DobbleGame {
     startAt.setSeconds(startAt.getSeconds() + 5)
     this.startAt = startAt.toISOString()
   }
-
 }

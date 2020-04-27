@@ -6,6 +6,7 @@ export type UpdateGame = (cb: (state: Game) => void) => void
 export enum GameStatus {
   Open = 'open',
   Playing = 'playing',
+  Finished = 'finished',
   Closed = 'closed'
 }
 
@@ -15,12 +16,10 @@ export type Deck = Card[]
 
 export type Player = User & {
   hand: Deck
-  online?: boolean
 }
 
 export type FirebasePlayer = User & {
   hand: string[]
-  online?: boolean
 }
 
 export interface Game {
@@ -32,6 +31,8 @@ export interface Game {
   }
   stack: Deck
   startAt: string | null
+  winner: string | null
+  createdAt: Date
 }
 
 export interface FirebaseGame extends Omit<Game, 'stack' | 'players'> {

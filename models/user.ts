@@ -6,7 +6,6 @@ export class DobbleUser implements Player {
     public id: string,
     public name: string,
     public hand: Deck = [],
-    public online: boolean = true
   ) {}
 
   static fromToken (token: string) {
@@ -18,13 +17,13 @@ export class DobbleUser implements Player {
   }
 
   static deserialize (json: FirebasePlayer) {
-    const { name, id, hand, online } = json
-    return new DobbleUser(id, name, hand.map(c => JSON.parse(c)), online)
+    const { name, id, hand } = json
+    return new DobbleUser(id, name, hand.map(c => JSON.parse(c)))
   }
 
   get toJSON () {
-    const { name, id, hand, online } = this
-    return { name, id, hand, online }
+    const { name, id, hand } = this
+    return { name, id, hand }
   }
 
   get forFirebase () {

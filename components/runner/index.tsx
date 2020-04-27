@@ -4,17 +4,11 @@ import React, { FunctionComponent, useMemo, useEffect, useState, useCallback } f
 import { DobbleCard } from "./dobble-card"
 import { useClient } from "~/util/use-client"
 import { Scoreboard } from "./scoreboard"
+import { getTimeLeft } from "~/util"
 
 type RunnerProps = {
   game: Game
   user: User
-}
-
-const getTimeLeft = (dateStr: Game['startAt']) => {
-  if (!dateStr) return 0
-  const date = new Date(dateStr)
-  const diff = date.valueOf() - Date.now()
-  return Math.floor((diff / 1000) % 60)
 }
 
 const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
@@ -48,7 +42,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
     <div className='game'>
       <DobbleCard card={deck} size='small' faceup={true} />
       <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice}/>
-      <Scoreboard players={Object.values(game.players)} />
+      <Scoreboard players={Object.values(game.players)} fixed={true} />
     </div>
   )
 }
