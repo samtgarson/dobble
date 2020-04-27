@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { GameStatus, Game } from '~/types/game'
 import { Event } from '~/types/events'
@@ -50,6 +50,10 @@ const GamePage = () => {
   useEffect(() => {
     if (!channel) return
     channel.bind(Event.StateUpdated, (data: Game) => setGame(data))
+    channel.bind(Event.NewGame, (data: { code: string }) => {
+      if (!game || game.state !== GameStatus.Finished) return
+      Router.push(`/${data.code}`)
+    })
   }, [channel])
 
   useAsyncFetch(

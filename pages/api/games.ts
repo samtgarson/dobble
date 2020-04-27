@@ -4,6 +4,7 @@ import { User } from '~/types/api'
 import { MiddlewareStack } from '~/util/middleware'
 import { DobbleUser } from '~/models/user'
 import { DobbleGame } from '~/models/game'
+import { Event } from '~/types/events'
 
 const newGame = (code: string, user: User) => new DobbleGame(
   code,
@@ -30,6 +31,11 @@ export default MiddlewareStack(async (req, res) => {
     await req.db.collection('games')
       .doc(code)
       .set(game.forFirebase)
+
+    const { previousGame } = req.query as { previousGame?: string }
+    if (previousGame) {
+      await req.trigger(`private-${previousGame}`, Event.NewGame, { code })
+    }
 
     res.status(201).json(game)
   } catch (e) {

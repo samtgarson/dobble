@@ -10,8 +10,6 @@ const serializePlayers = (ps: FirebaseGame['players']): DobbleGame['players'] =>
   .map(u => DobbleUser.deserialize(u))
 
 export class DobbleGame {
-  public startAt: string | null = null
-
   constructor (
     public code: string,
     public owner: string,
@@ -19,15 +17,16 @@ export class DobbleGame {
     public players: DobbleUser[],
     public stack: Deck = [],
     public winner: string | null = null,
+    public startAt: string | null = null,
     public createdAt: Date = new Date()
   ) {}
 
   static async fromFirebase (db: Firestore, code: string) {
     const game = (await db.collection('games').doc(code).get()).data() as FirebaseGame | undefined
     if (!game) return
-    const { owner, stack = [], state, players, winner, createdAt } = game
+    const { owner, stack = [], state, players, winner, createdAt, startAt } = game
 
-    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)), winner, createdAt)
+    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)), winner, startAt, createdAt)
   }
 
   ownedBy (user: DobbleUser) {

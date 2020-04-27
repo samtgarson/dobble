@@ -1,10 +1,11 @@
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useMemo, useState, useCallback } from 'react'
 import { Game } from '~/types/game'
 import { User } from '~/types/api'
 import { Wrapper } from './util/wrapper'
-import { Title } from 'rbx'
+import { Title, Button } from 'rbx'
 import { Scoreboard } from './runner/scoreboard'
-import { getTimeLeft } from '~/util'
+import { getTimeLeft, fi } from '~/util'
+import { useClient } from '~/util/use-client'
 
 type FinishedGameProps = {
   game: Game
@@ -12,16 +13,28 @@ type FinishedGameProps = {
 }
 
 export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user }) => {
+  const [loading, setLoading] = useState(false)
+  const client = useClient()
   const winner = useMemo(() => game.winner && game.players[game.winner], [game])
   const duration  = useMemo(() => {
     if (!game.startAt) return
 
     const seconds = getTimeLeft(game.startAt)
     const minutes = Math.floor(seconds / 60)
-    console.log(getTimeLeft(game.startAt))
     const remainder = seconds - (minutes * 60)
     return `${minutes}m ${remainder}s`
   }, [game])
+
+  const newGame = useCallback(async () => {
+    if (!client) return
+    setLoading(true)
+    try {
+      await client.post<Game>(`/api/games?previousGame=${game.code}`)
+    } catch (e) {
+      if (!e) return
+      setLoading(false)
+    }
+  }, [client])
 
   if (!winner) return <Wrapper>Loading...</Wrapper>
   return (
@@ -31,8 +44,12 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
         { duration && <span>(in {duration})</span> }
       </Title>
       <Scoreboard players={Object.values(game.players)} />
+      <div className="button-wrapper">
+        <Button color="success" onClick={newGame} state={fi(loading, 'loading')}>Start a new game</Button>
+      </div>
       <style jsx>{`
         span { font-weight: normal }
+        .button-wrapper { margin-top: 40px }
       `}</style>
     </Wrapper>
   )
