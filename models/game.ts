@@ -1,7 +1,7 @@
 import { Game, Deck, GameStatus, FirebaseGame } from "~/types/game"
 import { DobbleUser } from "./user"
 import { Dealer } from "~/services/dealer"
-import { Firestore, UpdateData } from "@google-cloud/firestore"
+import { Firestore, UpdateData, Timestamp } from "@google-cloud/firestore"
 
 const deserializePlayers = (ps: DobbleGame['players'], firebase = true) => ps
   .reduce((hsh, u) => ({ ...hsh, [u.id]: firebase ? u.forFirebase : u.toJSON }), {})
@@ -17,16 +17,27 @@ export class DobbleGame {
     public players: DobbleUser[],
     public stack: Deck = [],
     public winner: string | null = null,
-    public startAt: string | null = null,
-    public createdAt: Date = new Date()
+    public startedAt: Timestamp | null = null,
+    public finishedAt: Timestamp | null = null,
+    public createdAt: Timestamp = Timestamp.now()
   ) {}
 
   static async fromFirebase (db: Firestore, code: string) {
     const game = (await db.collection('games').doc(code).get()).data() as FirebaseGame | undefined
     if (!game) return
-    const { owner, stack = [], state, players, winner, createdAt, startAt } = game
+    const { owner, stack = [], state, players, winner, createdAt, startedAt, finishedAt } = game
 
-    return new DobbleGame(code, owner, state, serializePlayers(players), stack.map(c => JSON.parse(c)), winner, startAt, createdAt)
+    return new DobbleGame(
+      code,
+      owner,
+      state,
+      serializePlayers(players),
+      stack.map(c => JSON.parse(c)),
+      winner,
+      startedAt,
+      finishedAt,
+      createdAt
+    )
   }
 
   ownedBy (user: DobbleUser) {
@@ -52,6 +63,7 @@ export class DobbleGame {
         break
       case GameStatus.Finished:
         if (opts.winner) this.winner = opts.winner
+        this.finishedAt = Timestamp.now()
     }
 
     this.state = to
@@ -90,21 +102,25 @@ export class DobbleGame {
     return {
       ...attrs,
       stack: stack.map(c => JSON.stringify(c)),
-      players: deserializePlayers(this.players)
+      players: deserializePlayers(this.players),
+      startedAt: this.startedAt,
+      finishedAt: this.finishedAt,
+      createdAt: this.createdAt
     }
   }
 
   get toJSON (): Game {
-    const { code, owner, stack, state, players, startAt, winner, createdAt } = this
+    const { code, owner, stack, state, players, startedAt, finishedAt, winner, createdAt } = this
     return {
       code,
       owner,
       stack,
       state,
-      startAt,
+      startedAt: startedAt && startedAt.toDate().toISOString(),
+      finishedAt: finishedAt && finishedAt.toDate().toISOString(),
+      createdAt:  createdAt.toDate().toISOString(),
       players: deserializePlayers(players, false),
-      winner,
-      createdAt
+      winner
     }
   }
 
@@ -120,8 +136,8 @@ export class DobbleGame {
   }
 
   private setStartAt () {
-    const startAt = new Date()
-    startAt.setSeconds(startAt.getSeconds() + 5)
-    this.startAt = startAt.toISOString()
+    const startedAt = new Date()
+    startedAt.setSeconds(startedAt.getSeconds() + 5)
+    this.startedAt = Timestamp.fromDate(startedAt)
   }
 }

@@ -14,12 +14,12 @@ type RunnerProps = {
 const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
   const hand = useMemo(() => game.players[user.id].hand[0], [game, user])
   const deck = useMemo(() => game.stack[game.stack.length - 1], [game])
-  const [timeLeft, setTimeLeft] = useState(game.startAt && getTimeLeft(game.startAt))
+  const [timeLeft, setTimeLeft] = useState(game.startedAt && getTimeLeft(game.startedAt))
   const client = useClient()
 
   useEffect(() => {
     if (!timeLeft || timeLeft <= 0) return
-    setTimeout(() => setTimeLeft(game.startAt && getTimeLeft(game.startAt)), 1000)
+    setTimeout(() => setTimeLeft(game.startedAt && getTimeLeft(game.startedAt)), 1000)
   }, [timeLeft])
 
   const backText = useMemo(() => {

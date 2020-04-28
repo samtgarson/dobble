@@ -19,8 +19,8 @@ export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, fixed 
       <ul>
         {scores.map((s, i) => (
           <li key={s.id}>
-            { (i < 3) && medals[i] }
-            <span>{ s.name }</span>
+            <span>{ (i < 3) && medals[i] }</span>
+            <strong>{ s.name }</strong>
             { s.score }
           </li>
         ))}
@@ -58,9 +58,14 @@ export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, fixed 
           margin-left: 20px;
         }
 
-        span {
+        strong {
           font-weight: bold;
           margin: 0 4px;
+        }
+
+        .scoreboard:not(.fixed) span {
+          display: inline-block;
+          width: 24px;
         }
 
         .scoreboard:not(.fixed) li {

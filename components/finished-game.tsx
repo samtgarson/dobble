@@ -17,9 +17,9 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
   const client = useClient()
   const winner = useMemo(() => game.winner && game.players[game.winner], [game])
   const duration  = useMemo(() => {
-    if (!game.startAt) return
+    if (!game.startedAt) return
 
-    const seconds = getTimeLeft(game.startAt)
+    const seconds = getTimeLeft(game.startedAt, game.finishedAt)
     const minutes = Math.floor(seconds / 60)
     const remainder = seconds - (minutes * 60)
     return `${minutes}m ${remainder}s`
