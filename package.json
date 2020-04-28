@@ -16,6 +16,7 @@
     "@react-hook/throttle": "^1.0.12",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "axios": "^0.19.2",
+    "consola": "^2.11.3",
     "cookie": "^0.4.0",
     "firebase-admin": "^8.10.0",
     "jsonwebtoken": "^8.5.1",
