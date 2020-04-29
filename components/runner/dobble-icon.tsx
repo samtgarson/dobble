@@ -37,8 +37,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
   const TagName = useMemo(() => handleChoice ? 'button' : 'span', [handleChoice])
   const onClick = useCallback(async () => {
     if (!handleChoice) return
-    const success = await handleChoice()
-    console.log(success)
+    await handleChoice()
   }, [handleChoice])
 
   return (
