@@ -11,7 +11,7 @@ export const getTimeLeft = (fromDateStr?: string, toDateStr?: string | null) => 
   const fromDate = Date.parse(fromDateStr)
   const toDate = toDateStr == null ? new Date().valueOf() : Date.parse(toDateStr)
 
-  const diff = Math.abs(toDate - fromDate)
+  const diff = fromDate - toDate
   return Math.floor(diff / 1000)
 }
 

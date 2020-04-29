@@ -2,6 +2,7 @@ import { Game, Deck, GameStatus, FirebaseGame } from "~/types/game"
 import { DobbleUser } from "./user"
 import { Dealer } from "~/services/dealer"
 import { Firestore, UpdateData, Timestamp } from "@google-cloud/firestore"
+import { logger } from "~/util/logger"
 
 const deserializePlayers = (ps: DobbleGame['players'], firebase = true) => ps
   .reduce((hsh, u) => ({ ...hsh, [u.id]: firebase ? u.forFirebase : u.toJSON }), {})
@@ -56,6 +57,7 @@ export class DobbleGame {
   }
 
   transition (to: GameStatus, opts: { winner? : string } = {}): void {
+    logger.debug(`transitioning game ${this.code} to ${to}`)
     switch (to) {
       case GameStatus.Playing:
         this.deal()
@@ -125,12 +127,14 @@ export class DobbleGame {
   }
 
   private deal () {
+    logger.debug(`dealing game ${this.code}`)
     const playerCount = Object.values(this.players).length
     const dealer = new Dealer(playerCount)
     const { firstCard, hands } = dealer.run()
     this.stack = [firstCard]
 
     for (let i=0; i < this.players.length; i++) {
+      logger.debug(`dealing game ${this.code} (hand ${i} of length ${hands[i].length})`)
       this.players[i].hand = hands[i]
     }
   }

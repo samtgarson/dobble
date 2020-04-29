@@ -2,6 +2,7 @@ import { GameStatus, Card } from '~/types/game'
 import { Event } from '~/types/events'
 import { MiddlewareStack } from '~/util/middleware'
 import { DobbleGame } from '~/models/game'
+import { logger } from '~/util/logger'
 
 const compareCards = (a: Card, b: Card) => a.sort().join('-') === b.sort().join('-')
 
@@ -46,7 +47,7 @@ export default MiddlewareStack(async (req, res) => {
 
     return res.status(201).end()
   } catch (e) {
-    console.error(e)
+    logger.error(e)
     res.error(500, 'Unable to create move')
   }
 })

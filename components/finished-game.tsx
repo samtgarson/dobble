@@ -19,7 +19,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
   const duration  = useMemo(() => {
     if (!game.startedAt) return
 
-    const seconds = getTimeLeft(game.startedAt, game.finishedAt)
+    const seconds = Math.abs(getTimeLeft(game.startedAt, game.finishedAt))
     const minutes = Math.floor(seconds / 60)
     const remainder = seconds - (minutes * 60)
     return `${minutes}m ${remainder}s`
@@ -40,7 +40,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
   return (
     <Wrapper>
       <Title>
-        { winner.id === user.id ? '🎉 You won!' : `😞 ${winner.name} won` }
+        { winner.id === user.id ? '🎉 You won! ' : `😞 ${winner.name} won ` }
         { duration && <span>(in {duration})</span> }
       </Title>
       <Scoreboard players={Object.values(game.players)} />

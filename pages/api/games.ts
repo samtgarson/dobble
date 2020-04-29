@@ -5,6 +5,7 @@ import { MiddlewareStack } from '~/util/middleware'
 import { DobbleUser } from '~/models/user'
 import { DobbleGame } from '~/models/game'
 import { Event } from '~/types/events'
+import { logger } from '~/util/logger'
 
 const newGame = (code: string, user: User) => new DobbleGame(
   code,
@@ -39,7 +40,7 @@ export default MiddlewareStack(async (req, res) => {
 
     res.status(201).json(game)
   } catch (e) {
-    console.error(e)
+    logger.error(e)
     res.error(500, 'Unable to create game')
   }
 })

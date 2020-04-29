@@ -11,6 +11,7 @@ import { Wrapper } from '~/components/util/wrapper'
 import { useChannel, usePresenceChannel } from '@harelpls/use-pusher'
 import { useClient } from '~/util/use-client'
 import { FinishedGame } from '~/components/finished-game'
+import { logger } from '~/util/logger'
 
 type RenderGameProps = {
   game: Game
@@ -34,7 +35,6 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players })
   }
 }
 
-
 const GamePage = () => {
   const router = useRouter()
   const code = router.query.code as string | undefined
@@ -51,6 +51,7 @@ const GamePage = () => {
     if (!channel) return
     channel.bind(Event.StateUpdated, (data: Game) => setGame(data))
     channel.bind(Event.NewGame, (data: { code: string }) => {
+      logger.debug({ ...data, state: game && game.state })
       if (!game || game.state !== GameStatus.Finished) return
       Router.push(`/${data.code}`)
     })

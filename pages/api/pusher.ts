@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { MiddlewareStack } from "~/util/middleware"
 import { DobbleGame } from "~/models/game"
+import { logger } from "~/util/logger"
 
 const PusherAuth = MiddlewareStack(async (req, res) => {
   if (req.method !== 'POST') {
@@ -29,7 +30,7 @@ const PusherAuth = MiddlewareStack(async (req, res) => {
 
     res.status(200).json(auth)
   } catch (e) {
-    console.error(e)
+    logger.error(e)
     res.status(500).end()
   }
 })
