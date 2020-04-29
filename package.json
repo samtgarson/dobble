@@ -13,7 +13,6 @@
   "dependencies": {
     "@google-cloud/firestore": "^3.0.0",
     "@harelpls/use-pusher": "^4.0.1",
-    "@react-hook/throttle": "^1.0.12",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "axios": "^0.19.2",
     "consola": "^2.11.3",
