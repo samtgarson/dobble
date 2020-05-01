@@ -1,8 +1,9 @@
-import React, { ChangeEvent, FunctionComponent, useState, useCallback, useEffect } from "react"
+import React, { ChangeEvent, FunctionComponent, useState, useCallback, useEffect, KeyboardEvent } from "react"
 import Axios from 'axios'
 import { GlobalState } from "~/services/state"
-import { Container, Section, Title, Field, Label, Control, Input, Button } from 'rbx'
+import { Title, Field, Label, Control, Input, Button } from 'rbx'
 import { fi } from "~/util"
+import { Wrapper } from "./util/wrapper"
 
 const { post } = Axios
 
@@ -25,27 +26,26 @@ const Auth: FunctionComponent = () => {
   }, [name])
 
   return (
-    <Section>
-      <Container>
-        <Title size={3}>👋 Let&apos;s play Dobble!</Title>
-        <Label>What should we call you?</Label>
-        <Field kind="group">
-          <Control loading={loading} expanded>
-            <Input
-              color={invalid ? 'danger' : undefined}
-              type="text"
-              placeholder="Princess Consuela..."
-              disabled={loading}
-              value={name}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            />
-          </Control>
-          <Control>
-            <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
-          </Control>
-        </Field>
-      </Container>
-    </Section>
+    <Wrapper>
+      <Title size={3}>👋 Let&apos;s play Dobble!</Title>
+      <Label>What should we call you?</Label>
+      <Field kind="group">
+        <Control loading={loading} expanded>
+          <Input
+            color={invalid ? 'danger' : undefined}
+            type="text"
+            placeholder="Princess Consuela..."
+            disabled={loading}
+            value={name}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && createUser()}
+          />
+        </Control>
+        <Control>
+          <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
+        </Control>
+      </Field>
+    </Wrapper>
   )
 }
 

@@ -53,7 +53,7 @@ const GamePage = () => {
     channel.bind(Event.NewGame, (data: { code: string }) => {
       logger.debug({ ...data, state: game && game.state })
       if (!game || game.state !== GameStatus.Finished) return
-      Router.push(`/${data.code}`)
+      Router.push('/[code]', `/${data.code}`)
     })
   }, [channel])
 
@@ -76,11 +76,7 @@ const GamePage = () => {
     </Wrapper>
   )
 
-  if (!user || !game) return (
-    <Wrapper>
-      <p>⏳ Loading...</p>
-    </Wrapper>
-  )
+  if (!user || !game) return null
 
   return <RenderGame game={game} user={user} players={members} />
 }

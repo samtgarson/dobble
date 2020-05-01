@@ -30,6 +30,18 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
     hand.find(i => deck.includes(i))
    ), [game, hand])
 
+  const [deckCard, setDeckCard ] = useState(deck)
+
+  useEffect(() => {
+    let mounted = true
+    setTimeout(() => {
+      if (!mounted) return
+      setDeckCard(deck)
+    }, 200)
+
+    return () => { mounted = false }
+  }, [deck])
+
   const handleChoice = useCallback(async (index: number) => {
     if (!client || index !== match) return false
     await client.post(`/api/games/${game.code}/moves`, { match: index, deck, hand })
@@ -39,9 +51,9 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
   if (!hand.length) return <p>Dealing...</p>
 
   return (
-    <div className='game'>
-      <DobbleCard card={deck} size='small' faceup={true} />
-      <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice}/>
+    <div className='game' key={game.code}>
+      <DobbleCard card={deckCard} size='small' faceup={true} />
+      <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice} />
       <Scoreboard players={Object.values(game.players)} fixed={true} />
     </div>
   )

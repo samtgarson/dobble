@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useCallback } from "react"
+import React, { ChangeEvent, useState, useCallback, KeyboardEvent } from "react"
 import Router from 'next/router'
 import { Title, Field, Label, Control, Input, Button } from 'rbx'
 import { Game } from "~/types/game"
@@ -29,7 +29,7 @@ const Index = () => {
     code => {
       if (!code) return
       setLoading(true)
-      Router.push(`/${code}`)
+      Router.push('/[code]', `/${code}`)
     }, []
   )
 
@@ -46,6 +46,7 @@ const Index = () => {
               placeholder="Your game code"
               value={code}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
+              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && goToGame(code)}
             />
           </Control>
           <Control>
