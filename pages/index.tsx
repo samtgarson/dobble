@@ -29,7 +29,7 @@ const Index = () => {
     code => {
       if (!code) return
       setLoading(true)
-      Router.push('/[code]', `/${code}`)
+      Router.push('/game/[code]', `/game/${code}`)
     }, []
   )
 

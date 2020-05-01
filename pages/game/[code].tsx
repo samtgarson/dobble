@@ -53,7 +53,7 @@ const GamePage = () => {
     channel.bind(Event.NewGame, (data: { code: string }) => {
       logger.debug({ ...data, state: game && game.state })
       if (!game || game.state !== GameStatus.Finished) return
-      Router.push('/[code]', `/${data.code}`)
+      Router.push('/game/[code]', `/game/${data.code}`)
     })
   }, [channel])
 
