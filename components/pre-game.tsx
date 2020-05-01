@@ -30,8 +30,10 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
 
   const copyCode = useCallback(() => {
     let mounted = true
-    copy(game.code)
+    const url = new URL(`/game/${game.code}`, process.env.VERCEL_URL)
+    copy(url.toString())
     setCopied(true)
+
     setTimeout(() => mounted && setCopied(false), 1000)
     return () => mounted= false
   }, [game])
@@ -45,7 +47,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         <Level.Item align='right'>
           <Button size='small' pull='right' color="light" onClick={copyCode}>{ copied
             ? '✅ Copied'
-            : '📝 Copy game code'
+            : '📝 Copy share link'
           }</Button>
         </Level.Item>
       </Level>
