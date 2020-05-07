@@ -4,9 +4,13 @@ import { AnimatePresence  } from 'framer-motion'
 import { GlobalState } from '~/services/state'
 import 'rbx/index.css'
 import { AuthWrapper } from '~/components/auth-wrapper'
+import Head from 'next/head'
 
 const App = ({ Component, pageProps }: AppProps) => (
   <GlobalState.Provider>
+    <Head>
+      <title>Dobble</title>
+    </Head>
     <AnimatePresence>
       <AuthWrapper key={Component.name}>
         <Component {...pageProps} />

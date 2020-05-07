@@ -10,6 +10,7 @@ class DobbleDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;600&display=swap"
           />
+           <link rel="shortcut icon" href="/favicon.png" />
         </Head>
         <body>
           <Main />

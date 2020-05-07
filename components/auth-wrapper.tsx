@@ -23,11 +23,11 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
   if (!loaded) return <></>
   if (!token) return <Auth />
 
-  const headers = { Authorization: token } as unknown as Headers
+  const headers: Headers = { Authorization: token }
   const config = createConfig(headers)
   return (
     <PusherProvider {...config}>
-          { children }
+      { children }
     </PusherProvider>
   )
 }
