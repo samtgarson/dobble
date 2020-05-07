@@ -1,8 +1,10 @@
 import React, { ChangeEvent, useState, useCallback, KeyboardEvent } from "react"
+import Link from 'next/link'
 import Router from 'next/router'
-import { Title, Field, Label, Control, Input, Button } from 'rbx'
+import { Field, Label, Control, Input, Button } from 'rbx'
 import { Game } from "~/types/game"
-import { Wrapper } from "~/components/util/wrapper"
+import { Wrapper } from "~/components/wrapper"
+import { DobbleTitle } from '~/components/title'
 import { useClient } from "~/util/use-client"
 import { fi } from "~/util"
 
@@ -35,7 +37,9 @@ const Index = () => {
 
   return (
     <Wrapper>
-      <Title size={2}>Dobble</Title>
+      <DobbleTitle text="Dobble">
+        <Link href='/about'><Button color='light' as='a'>💜 About</Button></Link>
+      </DobbleTitle>
       <div className="begin-option">
         <Label>Already got a game code?</Label>
         <Field kind="group">
