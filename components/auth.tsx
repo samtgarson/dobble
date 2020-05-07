@@ -3,7 +3,7 @@ import Axios from 'axios'
 import { GlobalState } from "~/services/state"
 import { Title, Field, Label, Control, Input, Button } from 'rbx'
 import { fi } from "~/util"
-import { Wrapper } from "./util/wrapper"
+import { Wrapper } from "./wrapper"
 
 const { post } = Axios
 

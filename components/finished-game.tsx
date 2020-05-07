@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useMemo, useState, useCallback } from 'react'
 import { Game } from '~/types/game'
 import { User } from '~/types/api'
-import { Wrapper } from './util/wrapper'
+import { Wrapper } from './wrapper'
 import { Title, Button } from 'rbx'
 import { Scoreboard } from './runner/scoreboard'
 import { getTimeLeft, fi } from '~/util'

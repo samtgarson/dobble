@@ -9,6 +9,13 @@ declare global {
   interface Window {
     fathom: Fathom
   }
+
+  type ShareOptions = { title: string, text?: string, url: string }
+  type NavigatorShare = (options: ShareOptions) => Promise<{}>
+
+  interface Navigator {
+    share?: NavigatorShare
+  }
 }
 
 declare module 'react' {
