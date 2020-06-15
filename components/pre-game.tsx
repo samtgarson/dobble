@@ -57,8 +57,8 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
       </DobbleTitle>
       <Block>
         { game.owner === user.id
-          ? <Button size="large" color="success" state={fi(loading, 'loading')} onClick={startGame}>🚀 Begin Game</Button>
-          : <Button size="large" static>Waiting for {owner} to begin</Button>
+          ? <Button className="start-button" size="large" color="success" state={fi(loading, 'loading')} onClick={startGame}>🚀 Begin Game</Button>
+          : <Button className="start-button" size="large" static>Waiting for {owner} to begin</Button>
         }
       </Block>
       <Heading>Players</Heading>
@@ -68,6 +68,12 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         )}
         <Button size="small" state="loading" color="light" className="tag"></Button>
       </Tag.Group>
+      <style jsx>{`
+        :global(.start-button) {
+          height: auto;
+          white-space: normal;
+        }
+      `}</style>
     </Wrapper>
   )
 }
