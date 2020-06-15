@@ -15,7 +15,7 @@ class DobbleDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src="https://cdn.usefathom.com/3.js" site="KPUWCNUE"></script>
+          <script src="https://prawn.samgarson.com/script.js" site="KPUWCNUE" defer spa="true"></script>
         </body>
       </Html>
     )

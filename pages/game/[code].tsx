@@ -55,7 +55,7 @@ const GamePage = () => {
       if (!game || game.state !== GameStatus.Finished) return
       Router.push('/game/[code]', `/game/${data.code}`)
     })
-  }, [channel])
+  }, [channel, game])
 
   useAsyncFetch(
     async () => {

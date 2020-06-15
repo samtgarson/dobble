@@ -22,7 +22,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   const startGame = useCallback(() => {
     if (!client) return
     setLoading(true)
-    window.fathom('trackGoal', 'MFTZ2U9V', 0)
+    if (window.fathom) window.fathom.trackGoal('MFTZ2U9V', 0)
     client.patch(`/api/games/${game.code}`, {
       players: Object.values(players),
       state: GameStatus.Playing

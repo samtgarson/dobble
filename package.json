@@ -11,17 +11,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^3.0.0",
-    "@harelpls/use-pusher": "^4.0.1",
+    "@google-cloud/firestore": "^3.8.5",
+    "@harelpls/use-pusher": "^4.1.5",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "axios": "^0.19.2",
-    "consola": "^2.11.3",
+    "consola": "^2.13.0",
     "cookie": "^0.4.0",
     "copy-text-to-clipboard": "^2.2.0",
-    "firebase-admin": "^8.10.0",
+    "firebase-admin": "^8.12.1",
     "framer-motion": "^2.0.0-beta.57",
     "jsonwebtoken": "^8.5.1",
-    "next": "^9.3.4",
+    "next": "^9.4.4",
     "next-compose-plugins": "^2.2.0",
     "pify": "github:chinesedfan/pify#add-dts",
     "pusher": "^3.0.1",
@@ -30,7 +30,7 @@
     "react-dom": "^16.13.1",
     "source-map-support": "^0.5.17",
     "unstated-next": "^1.1.0",
-    "uuid": "^7.0.3",
+    "uuid": "^8.1.0",
     "yawg": "^1.2.3"
   },
   "devDependencies": {

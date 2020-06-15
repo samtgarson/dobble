@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useState, useCallback } from 'react'
+import React, { FunctionComponent, useMemo, useState, useCallback, useEffect } from 'react'
 import { Game } from '~/types/game'
 import { User } from '~/types/api'
 import { Wrapper } from './wrapper'
@@ -35,6 +35,10 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
       setLoading(false)
     }
   }, [client])
+
+  useEffect(() => {
+    if (window.fathom) window.fathom.trackGoal('OQHSDU2R', 0)
+  }, [])
 
   if (!winner) return <Wrapper>Loading...</Wrapper>
   return (

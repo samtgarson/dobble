@@ -1,13 +1,13 @@
 export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
 
 interface Fathom {
-  (...args: any[]): void
+  trackGoal: (goal: string, value: number) => void
   q?: Array<IArguments>
 }
 
 declare global {
   interface Window {
-    fathom: Fathom
+    fathom?: Fathom
   }
 
   type ShareOptions = { title: string, text?: string, url: string }
@@ -21,5 +21,6 @@ declare global {
 declare module 'react' {
   interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
     site?: string
+    spa?: string
   }
 }

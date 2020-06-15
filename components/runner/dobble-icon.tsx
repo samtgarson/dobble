@@ -77,6 +77,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
           font-size: inherit;
           cursor: pointer;
           outline: none;
+          font-family: 'Manrope', sans-serif;
         }
 
         @media (min-width: 444px) {
