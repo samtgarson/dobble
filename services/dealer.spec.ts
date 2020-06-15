@@ -13,11 +13,27 @@ describe('Dealer', () => {
   })
 
   it('gives the players cards', () => {
-    const lengths = [19, 19, 18]
+    const lengths = [18, 18, 18]
 
     expect(result.hands).toBeInstanceOf(Array)
     result.hands.forEach((hand, i) => {
       expect(hand.length).toEqual(lengths[i])
+    })
+  })
+
+  describe('for 6 players', () => {
+    beforeEach(() => {
+      const dealer = new Dealer(6)
+      result = dealer.run()
+    })
+
+    it('gives the players cards', () => {
+      const lengths = [9, 9, 9, 9, 9, 9]
+
+      expect(result.hands).toBeInstanceOf(Array)
+      result.hands.forEach((hand, i) => {
+        expect(hand.length).toEqual(lengths[i])
+      })
     })
   })
 })

@@ -24,9 +24,10 @@ export class Dealer {
 
   private deal (pile: Deck) {
     logger.debug(`pile length before ${pile.length}`)
-    const handSize = Math.ceil(pile.length / this.playerCount)
+    const handSize = Math.floor(pile.length / this.playerCount)
     const hands: Deck[] = []
-    while (pile.length > 0) {
+
+    for (let i=0; i<this.playerCount; i++) {
       hands.push(pile.splice(0, handSize))
     }
 
