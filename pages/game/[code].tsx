@@ -45,7 +45,7 @@ const GamePage = () => {
   const [err, setErr] = useState(false)
 
   const channel = useChannel(`private-${code}`)
-  const { members } = usePresenceChannel(`presence-${code}`)
+  const { members = {} } = usePresenceChannel(`presence-${code}`)
 
   useEffect(() => {
     if (!channel) return
