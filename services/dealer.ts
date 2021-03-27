@@ -1,5 +1,5 @@
 import { shuffle } from '~/util'
-import { Deck } from '~/types/game'
+import { Card, Deck } from '~/types/game'
 import { logger } from '~/util/logger'
 
 export class Dealer {
@@ -12,7 +12,7 @@ export class Dealer {
     if (!playerCount) throw new Error('Not enough players')
   }
 
-  run () {
+  run (): { firstCard: Card, hands: Deck[] } {
     const pile = shuffle(this.deck)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const firstCard = pile.pop()!

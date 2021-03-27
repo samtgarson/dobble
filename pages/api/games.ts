@@ -35,7 +35,7 @@ export default MiddlewareStack(async (req, res) => {
 
     const { previousGame } = req.query as { previousGame?: string }
     if (previousGame) {
-      await req.trigger(`private-${previousGame}`, Event.NewGame, { code })
+      await req.pusher.trigger(`private-${previousGame}`, Event.NewGame, { code })
     }
 
     res.status(201).json(game)

@@ -22,10 +22,6 @@ export const PusherMiddleware: DobbleMiddleware = req => {
   const dReq = req as DobbleApiRequest
 
   dReq.pusher = pusher
-  dReq.trigger = (channel, eventName, body) => new Promise((resolve, reject) => (
-    // eslint-disable-next-line promise/prefer-await-to-callbacks
-    pusher.trigger(channel, eventName, body, err => err ? reject(err) : resolve())
-  ))
 
   return dReq
 }

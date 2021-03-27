@@ -1,22 +1,23 @@
-import Router, { useRouter } from 'next/router'
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import { GameStatus, Game } from '~/types/game'
-import { Event } from '~/types/events'
-import { GlobalState } from '~/services/state'
-import Runner from '~/components/runner'
-import PreGame from '~/components/pre-game'
-import { User } from '~/types/api'
-import { useAsyncFetch } from '~/util/use-async'
-import { Wrapper } from '~/components/wrapper'
 import { useChannel, usePresenceChannel } from '@harelpls/use-pusher'
-import { useClient } from '~/util/use-client'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { FinishedGame } from '~/components/finished-game'
+import PreGame from '~/components/pre-game'
+import Runner from '~/components/runner'
+import { Wrapper } from '~/components/wrapper'
+import { GlobalState } from '~/services/state'
+import { User } from '~/types/api'
+import { Event } from '~/types/events'
+import { Game, GameStatus, Player } from '~/types/game'
 import { logger } from '~/util/logger'
+import { useAsyncFetch } from '~/util/use-async'
+import { useClient } from '~/util/use-client'
 
 type RenderGameProps = {
   game: Game
   user: User
-  players: { [id: string]: any }
+  players: Record<string, Player>
 }
 const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players }) => {
   switch (game.state) {
@@ -35,9 +36,9 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user, players })
   }
 }
 
-const GamePage = () => {
+const GamePage: NextPage = () => {
   const router = useRouter()
-  const code = router.query.code as string | undefined
+  const code = router.query.code as string
   const { user } = GlobalState.useContainer()
   const client = useClient()
 
@@ -53,13 +54,14 @@ const GamePage = () => {
     channel.bind(Event.NewGame, (data: { code: string }) => {
       logger.debug({ ...data, state: game && game.state })
       if (!game || game.state !== GameStatus.Finished) return
-      Router.push('/game/[code]', `/game/${data.code}`)
+      router.push(`/game/${data.code}`)
     })
   }, [channel, game])
 
   useAsyncFetch(
     async () => {
-      const { data } = await client!.get<Game>(`/api/games/${code!}`)
+      if (!code || !client) return
+      const { data } = await client.get<Game>(`/api/games/${code}`)
       return data
     },
     g => {

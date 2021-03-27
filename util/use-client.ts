@@ -1,8 +1,8 @@
-import Axios, { AxiosError } from "axios"
-import { GlobalState, StateDispatch } from '../services/state'
+import Axios, { AxiosError, AxiosInstance } from "axios"
 import { useMemo } from "react"
+import { GlobalState, StateDispatch } from '../services/state'
 
-export const createClient = (dispatch: StateDispatch, token: string) => {
+export const createClient = (dispatch: StateDispatch, token: string): AxiosInstance => {
   const client = Axios.create({
     headers: {
       Authorization: token
@@ -11,6 +11,7 @@ export const createClient = (dispatch: StateDispatch, token: string) => {
 
   client.interceptors.response.use(
     response => response,
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
     async (error: AxiosError) => {
       if (error && error.response && error.response.status === 401) {
         dispatch({ user: undefined, token: undefined })
@@ -24,7 +25,7 @@ export const createClient = (dispatch: StateDispatch, token: string) => {
   return client
 }
 
-export const useClient = () => {
+export const useClient = (): AxiosInstance | void => {
   const { dispatch, token } = GlobalState.useContainer()
   if (!token) return
 

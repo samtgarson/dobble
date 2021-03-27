@@ -3,8 +3,9 @@ import { Title, Button } from 'rbx'
 import Link from 'next/link'
 import { DobbleTitle } from '~/components/title'
 import { Wrapper } from '~/components/wrapper'
+import { NextPage } from 'next'
 
-const About = () => (
+const About: NextPage = () => (
   <Wrapper>
     <DobbleTitle text='About'>
       <Link href="/"><Button color='light' as='a'>Back</Button></Link>

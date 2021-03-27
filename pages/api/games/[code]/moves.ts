@@ -12,7 +12,7 @@ export default MiddlewareStack(async (req, res) => {
     return
   }
 
-  const { query, user, db, body, trigger } = req
+  const { query, user, db, body, pusher } = req
 
   try {
     const game = await DobbleGame.fromFirebase(db, query.code as string)
@@ -41,7 +41,7 @@ export default MiddlewareStack(async (req, res) => {
     game.stack.push(playerCard)
 
     await Promise.all([
-      trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON),
+      pusher.trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON),
       game.update(db, game.forFirebase)
     ])
 

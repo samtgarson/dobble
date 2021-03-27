@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { MiddlewareStack } from "~/util/middleware"
 import { DobbleGame } from "~/models/game"
 import { logger } from "~/util/logger"
@@ -22,9 +21,8 @@ const PusherAuth = MiddlewareStack(async (req, res) => {
     if (!game) return res.error(404, 'Game not found')
     if (!game.canPlay(req.user.id)) return res.error(403, 'Cannot join game')
 
-    const auth = await req.pusher.authenticate(socketId, channel, {
+    const auth = req.pusher.authenticate(socketId, channel, {
       user_id: req.user.id,
-      // @ts-ignore https://github.com/pusher/pusher-http-node/pull/119
       user_info: req.user
     })
 

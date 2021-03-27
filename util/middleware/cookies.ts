@@ -1,16 +1,16 @@
-import { serialize } from 'cookie'
+import { CookieSerializeOptions, serialize } from 'cookie'
 import { NextApiResponse } from 'next'
 
 export const cookie = (
   res: NextApiResponse,
   name: string,
   value: string,
-  options: { [key: string]: any } = {}
-) => {
+  options: CookieSerializeOptions = {}
+): void => {
   const stringValue =
     typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
-  if ('maxAge' in options) {
+  if (options.maxAge) {
     options.expires = new Date(Date.now() + options.maxAge)
     options.maxAge /= 1000
   }

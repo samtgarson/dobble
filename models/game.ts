@@ -23,7 +23,7 @@ export class DobbleGame {
     public createdAt: Timestamp = Timestamp.now()
   ) {}
 
-  static async fromFirebase (db: Firestore, code: string) {
+  static async fromFirebase (db: Firestore, code: string): Promise<DobbleGame | void> {
     const game = (await db.collection('games').doc(code).get()).data() as FirebaseGame | undefined
     if (!game) return
     const { owner, stack = [], state, players, winner, createdAt, startedAt, finishedAt } = game
@@ -41,11 +41,11 @@ export class DobbleGame {
     )
   }
 
-  ownedBy (user: DobbleUser) {
+  ownedBy (user: DobbleUser): boolean {
     return this.owner === user.id
   }
 
-  canTransition (to: GameStatus, user: DobbleUser) {
+  canTransition (to: GameStatus, user: DobbleUser): boolean {
     switch (this.state) {
       case GameStatus.Open:
         return to === GameStatus.Playing && this.ownedBy(user)
@@ -78,21 +78,21 @@ export class DobbleGame {
     return !!(this.players.find(p => p.id === id))
   }
 
-  addPlayers (players: DobbleUser[]) {
+  addPlayers (players: DobbleUser[]): void {
     this.players = players
   }
 
-  update (db: Firestore, data: UpdateData) {
-    return db.collection('games')
+  async update (db: Firestore, data: UpdateData): Promise<void> {
+    await db.collection('games')
       .doc(this.code)
       .update(data)
   }
 
-  reload (db: Firestore) {
+  reload (db: Firestore): Promise<DobbleGame | void> {
     return DobbleGame.fromFirebase(db, this.code)
   }
 
-  updatePlayer (player: DobbleUser) {
+  updatePlayer (player: DobbleUser): void {
     const i = this.players.findIndex(p => p.id === player.id)
     this.players.splice(i, 1, player)
 

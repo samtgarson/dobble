@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuid } from 'uuid'
 import jwt from 'jsonwebtoken'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
   if (!process.env.SECRET_KEY) throw new Error('Missing secret key')
 
   if (req.method !== 'POST') {
@@ -28,3 +28,4 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   res.end(JSON.stringify({ token, user }))
 }
 
+export default handler

@@ -7,8 +7,9 @@ import { Wrapper } from "~/components/wrapper"
 import { DobbleTitle } from '~/components/title'
 import { useClient } from "~/util/use-client"
 import { fi } from "~/util"
+import { NextPage } from "next"
 
-const Index = () => {
+const Index: NextPage = () => {
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState('')
   const [err, setErr] = useState<Error>()

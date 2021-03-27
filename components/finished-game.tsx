@@ -6,6 +6,7 @@ import { Title, Button } from 'rbx'
 import { Scoreboard } from './runner/scoreboard'
 import { getTimeLeft, fi } from '~/util'
 import { useClient } from '~/util/use-client'
+import * as Fathom from 'fathom-client'
 
 type FinishedGameProps = {
   game: Game
@@ -37,7 +38,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
   }, [client])
 
   useEffect(() => {
-    if (window.fathom) window.fathom.trackGoal('OQHSDU2R', 0)
+    Fathom.trackGoal('OQHSDU2R', 0)
   }, [])
 
   if (!winner) return <Wrapper>Loading...</Wrapper>

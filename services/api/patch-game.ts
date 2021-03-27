@@ -4,8 +4,8 @@ import { DobbleUser } from "~/models/user"
 import { Event } from '~/types/events'
 import { logger } from "~/util/logger"
 
-export const updateGame = async (req: DobbleApiRequest, code: string, res: DobbleApiResponse) => {
-  const { user, db, trigger, body: { state, players = [] } } = req
+export const updateGame = async (req: DobbleApiRequest, code: string, res: DobbleApiResponse): Promise<void> => {
+  const { user, db, pusher, body: { state, players = [] } } = req
   if (!Array.isArray(players) || players.length === 0) return res.error(400, 'Provide at least one player')
 
   try {
@@ -19,7 +19,7 @@ export const updateGame = async (req: DobbleApiRequest, code: string, res: Dobbl
 
     logger.debug(`saving game ${code}`)
     await game.update(db, game.forFirebase)
-    await trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
+    await pusher.trigger(`private-${game.code}`, Event.StateUpdated, game.toJSON)
     logger.debug(`saved game ${code}`)
 
     return res.status(200).json(game.toJSON)

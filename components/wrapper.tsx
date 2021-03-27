@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState } from "react"
-import { Section } from "rbx"
 import { motion } from "framer-motion"
-import { Router } from "next/router"
+import { Section } from "rbx"
+import React, { FunctionComponent } from "react"
 
 const variants = {
   hidden: { opacity: 0, y: 5, scale: 0.98 },

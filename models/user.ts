@@ -8,7 +8,7 @@ export class DobbleUser implements Player {
     public hand: Deck = [],
   ) {}
 
-  static fromToken (token: string) {
+  static fromToken (token: string): DobbleUser {
     const { SECRET_KEY } = process.env
     if (!SECRET_KEY) throw new Error('Missing secret key env')
 
@@ -16,17 +16,17 @@ export class DobbleUser implements Player {
     return new DobbleUser(id, name)
   }
 
-  static deserialize (json: FirebasePlayer) {
+  static deserialize (json: FirebasePlayer): DobbleUser {
     const { name, id, hand } = json
     return new DobbleUser(id, name, hand.map(c => JSON.parse(c)))
   }
 
-  get toJSON () {
+  get toJSON (): Player {
     const { name, id, hand } = this
     return { name, id, hand }
   }
 
-  get forFirebase () {
+  get forFirebase (): FirebasePlayer {
     const { hand = [], ...attrs } = this.toJSON
     return { ...attrs, hand: hand.map(c => JSON.stringify(c)) }
   }

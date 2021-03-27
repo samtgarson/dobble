@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 
-const allArePresent = (arr: any[] = []) => arr.every(i => typeof i !== undefined)
+const allArePresent = (arr: unknown[] = []) => arr.every(i => typeof i !== undefined)
 
-export function useAsyncFetch<T, D extends any[]> (
+export function useAsyncFetch<T, D extends unknown[]> (
   fetcher: () => (Promise<T> | undefined),
   done: (data: T) => void,
   errorHandler?: (error: Error) => void,
   dependencies?: D
-) {
+): void {
   const defaultErrorHandler = () => {}
   const handleError = errorHandler || defaultErrorHandler
 
