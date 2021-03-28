@@ -12,7 +12,6 @@ export type DobbleApiRequest = NextApiRequest & {
   user: DobbleUser
   db: Firestore
   pusher: Pusher
-  trigger: (channel: string, eventName: string, body: any) => Promise<void>
 }
 
 export type DobbleApiResponse = NextApiResponse & {

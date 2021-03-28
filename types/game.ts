@@ -1,5 +1,4 @@
 import { User } from "./api"
-import { Omit } from './index'
 import { Timestamp } from "@google-cloud/firestore"
 
 export type UpdateGame = (cb: (state: Game) => void) => void
@@ -23,10 +22,14 @@ export type FirebasePlayer = User & {
   hand: string[]
 }
 
-export interface Game {
+interface BaseGame {
   state: GameStatus
   code: string
   owner: string
+  winner: string | null
+}
+
+export type Game = BaseGame & {
   players: {
     [id: string]: Player
   }
@@ -34,10 +37,9 @@ export interface Game {
   startedAt: string | null
   finishedAt: string | null
   createdAt: string
-  winner: string | null
 }
 
-export interface FirebaseGame extends Omit<Game, 'stack' | 'players' | 'startedAt' | 'finishedAt' | 'createdAt'> {
+export type FirebaseGame = BaseGame & {
   stack: string[]
   players: {
     [id: string]: FirebasePlayer
