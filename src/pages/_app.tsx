@@ -1,12 +1,13 @@
 import { AnimatePresence } from 'framer-motion'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import 'rbx/index.css'
 import React, { useEffect } from 'react'
 import { AuthWrapper } from '~/components/auth-wrapper'
 import { GlobalState } from '~/services/state'
 import * as Fathom from 'fathom-client'
 import { useRouter } from 'next/router'
+import { NavBar } from '../components/nav-bar'
+import 'src/styles/global.scss'
 
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
@@ -40,6 +41,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           />
           <link rel="shortcut icon" href="/favicon.png" />
       </Head>
+      <NavBar />
       <AnimatePresence>
         <AuthWrapper key={Component.name}>
           <Component {...pageProps} />
@@ -49,8 +51,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
         body, html {
           min-height: 100vh;
           min-height: -webkit-max-available;
-          background-color: #6600ff;
-          font-family: 'Manrope', sans-serif;
+          background-color: var(--purple);
         }
         `}
       </style>

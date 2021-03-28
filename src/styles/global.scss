@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+$purple: #6600ff;
+
+$primary: $purple;
+$link: $purple;
+$family-sans-serif: 'Manrope', sans-serif;
+
+:root {
+  --purple: #{$purple};
+}
+
+@import "~bulma/bulma.sass";

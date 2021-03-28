@@ -1,11 +1,9 @@
 import { createContainer } from 'unstated-next'
 import { useReducer, useEffect, Dispatch } from 'react'
+import { User } from '~/types/api'
 
 export interface State {
-  user?: {
-    name: string
-    id: string
-  }
+  user?: User
   token?: string
   loaded: boolean
 }
