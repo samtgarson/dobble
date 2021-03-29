@@ -26,7 +26,7 @@ const useGlobalState = () => {
   }, [])
 
   useEffect(() => {
-    if (!state.token) return window.localStorage.removeItem(STORAGE_KEY)
+    if (!state.user) return window.localStorage.removeItem(STORAGE_KEY)
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   }, [state])
 

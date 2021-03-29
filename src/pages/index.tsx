@@ -2,31 +2,32 @@ import React, { ChangeEvent, useState, useCallback, KeyboardEvent } from "react"
 import Link from 'next/link'
 import Router from 'next/router'
 import { Field, Label, Control, Input, Button } from 'rbx'
-import { Game } from "~/types/game"
 import { Wrapper } from "~/components/wrapper"
 import { DobbleTitle } from '~/components/title'
-import { useClient } from "~/util/use-client"
 import { fi } from "~/util"
 import { NextPage } from "next"
+import { GlobalState } from "../services/state"
+import { DataClient } from "../services/data-client"
 
 const Index: NextPage = () => {
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState('')
   const [err, setErr] = useState<Error>()
-  const client = useClient()
+  const { user } = GlobalState.useContainer()
+  const client = DataClient.useClient()
 
   const createGame = useCallback(async () => {
-    if (!client) return
+    if (!user) return
     setLoading(true)
     try {
-      const { data: { code } } = await client.post<Game>('/api/games')
-      return goToGame(code)
+      const game = await client.createGame(user.id)
+      return goToGame(game.id)
     } catch (e) {
       if (!e) return
       setLoading(false)
       setErr(e)
     }
-  }, [client])
+  }, [])
 
   const goToGame = useCallback(
     code => {

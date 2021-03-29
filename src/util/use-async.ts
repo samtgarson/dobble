@@ -1,9 +1,14 @@
 import { useEffect } from 'react'
 
-const allArePresent = (arr: unknown[] = []) => arr.every(i => typeof i !== undefined)
+type Deps = Record<string, unknown | undefined>
 
-export function useAsyncFetch<T, D extends unknown[]> (
-  fetcher: () => (Promise<T> | undefined),
+const allArePresent = <Hsh extends Deps>(hsh?: Hsh): hsh is Required<Hsh> => {
+  if (!hsh) return false
+  return Object.values(hsh).every(i => typeof i !== 'undefined')
+}
+
+export function useAsyncFetch<T, D extends Deps> (
+  fetcher: (deps: Required<D>) => (Promise<T> | undefined),
   done: (data: T) => void,
   errorHandler?: (error: Error) => void,
   dependencies?: D
@@ -17,7 +22,7 @@ export function useAsyncFetch<T, D extends unknown[]> (
     let mounted = true
     const run = async () => {
       try {
-        const data = await fetcher()
+        const data = await fetcher(dependencies)
         if (mounted && data) done(data)
       } catch (error) {
         handleError(error)
@@ -26,5 +31,5 @@ export function useAsyncFetch<T, D extends unknown[]> (
 
     run()
     return () => { mounted = false }
-  }, dependencies)
+  }, Object.values(dependencies ?? []))
 }

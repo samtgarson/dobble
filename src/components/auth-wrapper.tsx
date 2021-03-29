@@ -1,34 +1,21 @@
-import { PusherProviderProps, PusherProvider } from "@harelpls/use-pusher"
+import { createClient } from "@supabase/supabase-js"
 import React, { FunctionComponent } from "react"
+import { SupabaseContextProvider } from "use-supabase"
 import { GlobalState } from "~/services/state"
 import Welcome from "./welcome"
 
-type Headers = { [key: string]: string }
-const createConfig = (headers: Headers): PusherProviderProps => {
-  const clientKey = process.env.PUSHER_KEY
-  const cluster = process.env.PUSHER_CLUSTER
-  if (!clientKey || !cluster) throw new Error('Missing Pusher client creds')
-  return {
-    clientKey,
-    cluster,
-    auth: { headers, params: {} },
-    triggerEndpoint: '/api/publish',
-    authEndpoint: '/api/pusher'
-  }
-}
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
 
 export const AuthWrapper: FunctionComponent = ({ children }) => {
-  const { token, loaded } = GlobalState.useContainer()
+  const { user, loaded } = GlobalState.useContainer()
 
   if (!loaded) return <></>
-  if (!token) return <Welcome />
+  if (!user) return <Welcome />
 
-  const headers: Headers = { Authorization: token }
-  const config = createConfig(headers)
   return (
-    <PusherProvider {...config}>
+    <SupabaseContextProvider client={supabase}>
       { children }
-    </PusherProvider>
+    </SupabaseContextProvider>
   )
 }
 

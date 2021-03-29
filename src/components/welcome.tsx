@@ -1,17 +1,16 @@
-import React, { ChangeEvent, FunctionComponent, useState, useCallback, useEffect, KeyboardEvent } from "react"
-import Axios from 'axios'
+import { Button, Control, Field, Input, Label, Title } from 'rbx'
+import React, { ChangeEvent, FunctionComponent, KeyboardEvent, useCallback, useEffect, useState } from "react"
 import { GlobalState } from "~/services/state"
-import { Title, Field, Label, Control, Input, Button } from 'rbx'
 import { fi } from "~/util"
+import { DataClient } from "../services/data-client"
 import { Wrapper } from "./wrapper"
-
-const { post } = Axios
 
 const Auth: FunctionComponent = () => {
   const { dispatch } = GlobalState.useContainer()
   const [name, setName] = useState<string>('')
   const [invalid, setInvalid] = useState(false)
   const [loading, setLoading] = useState(false)
+  const client = DataClient.useClient()
 
   useEffect(() => {
     setInvalid(false)
@@ -21,8 +20,8 @@ const Auth: FunctionComponent = () => {
     if (!name) return setInvalid(true)
 
     setLoading(true)
-    const { data: { token, user } } = await post('/api/users', { name })
-    dispatch({ user, token })
+    const user = await client.createUser(name)
+    dispatch({ user })
   }, [name])
 
   return (

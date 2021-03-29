@@ -1,14 +1,13 @@
+import * as Fathom from 'fathom-client'
 import { AnimatePresence } from 'framer-motion'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import 'src/styles/global.scss'
 import { AuthWrapper } from '~/components/auth-wrapper'
 import { GlobalState } from '~/services/state'
-import * as Fathom from 'fathom-client'
-import { useRouter } from 'next/router'
 import { NavBar } from '../components/nav-bar'
-import 'src/styles/global.scss'
-
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const router = useRouter()

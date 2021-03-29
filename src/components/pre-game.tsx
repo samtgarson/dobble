@@ -1,15 +1,16 @@
-import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
-import { GameStatus, Game, Player } from "~/types/game"
-import { User } from "~/types/api"
-import { Tag, Button, Heading, Block } from 'rbx'
-import { useClient } from "~/util/use-client"
-import { fi } from '~/util'
-import { Wrapper } from "./wrapper"
-import { DobbleTitle } from "./title"
 import * as Fathom from 'fathom-client'
+import { Block, Button, Heading, Tag } from 'rbx'
+import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
+import { User } from "~/types/api"
+import { GameEntityWithPlayers } from "~/types/entities"
+import { GameStatus, Player } from "~/types/game"
+import { fi } from '~/util'
+import { useClient } from "~/util/use-client"
+import { DobbleTitle } from "./title"
+import { Wrapper } from "./wrapper"
 
 type PreGameProps = {
-  game: Game
+  game: GameEntityWithPlayers
   user: User
   players: Record<string, Player>
 }
@@ -23,7 +24,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
     if (!client) return
     setLoading(true)
     Fathom.trackGoal('MFTZ2U9V', 0)
-    client.patch(`/api/games/${game.code}`, {
+    client.patch(`/api/games/${game.id}`, {
       players: Object.values(players),
       state: GameStatus.Playing
     })
@@ -34,7 +35,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
     const url = location.href
 
     if (navigator['share'] !== undefined) {
-      navigator.share({ title: 'Dobble', url })
+      navigator.share({ title: 'Dobble', url }).catch(() => {})
     } else {
       navigator.clipboard.writeText(url)
       setCopied(true)
@@ -45,7 +46,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
     return () => mounted = false
   }, [game])
 
-  const owner = useMemo(() => game.players[game.owner].name, [game])
+  const owner = useMemo(() => players[game.owner_id]?.name, [players, game])
 
   return (
     <Wrapper>
@@ -56,7 +57,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         }</Button>
       </DobbleTitle>
       <Block>
-        { game.owner === user.id
+        { game.owner_id === user.id
           ? <Button className="start-button" size="large" color="success" state={fi(loading, 'loading')} onClick={startGame}>🚀 Begin Game</Button>
           : <Button className="start-button" size="large" static>Waiting for {owner} to begin</Button>
         }

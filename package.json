@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "debug": "NODE_OPTIONS='--inspect' next dev",
-    "dev": "next dev",
+    "dev": "next dev --port 5000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 5000",
     "lint": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
     "test": "jest"
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.9.8",
     "@harelpls/use-pusher": "^7.2.1",
+    "@supabase/supabase-js": "^1.7.1",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "axios": "^0.21.1",
     "bulma": "^0.7.5",
@@ -32,6 +33,7 @@
     "react-dom": "^17.0.2",
     "source-map-support": "^0.5.19",
     "unstated-next": "^1.1.0",
+    "use-supabase": "^1.0.3",
     "uuid": "^8.3.2",
     "yawg": "^1.2.3"
   },
