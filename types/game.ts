@@ -16,6 +16,7 @@ export type Deck = Card[]
 
 export type Player = User & {
   hand: Deck
+  game_id: string
 }
 
 export type FirebasePlayer = User & {

@@ -1,60 +1,44 @@
-import { Game } from "~/types/game"
-import { User } from "~/types/api"
-import React, { FunctionComponent, useMemo, useEffect, useState, useCallback } from "react"
-import { DobbleCard } from "./dobble-card"
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react"
+import { GameEntityWithMeta } from "~/types/entities"
+import { Player } from "~/types/game"
+import { getTimeLeft, playersFrom } from "~/util"
 import { useClient } from "~/util/use-client"
+import { DobbleCard } from "./dobble-card"
 import { Scoreboard } from "./scoreboard"
-import { getTimeLeft } from "~/util"
 
 type RunnerProps = {
-  game: Game
-  user: User
+  game: GameEntityWithMeta
+  user: Player
 }
 
 const Runner: FunctionComponent<RunnerProps> = ({ game, user }) => {
-  const hand = useMemo(() => game.players[user.id].hand[0], [game, user])
-  const deck = useMemo(() => game.stack[game.stack.length - 1], [game])
-  const [timeLeft, setTimeLeft] = useState(game.startedAt && getTimeLeft(game.startedAt))
+  const players = playersFrom(game)
+  const hand = useMemo(() => players[user.id].hand[0], [game, user])
+  const [timeLeft, setTimeLeft] = useState(game.started_at && getTimeLeft(game.started_at))
   const client = useClient()
 
   useEffect(() => {
     if (!timeLeft || timeLeft <= 0) return
-    setTimeout(() => setTimeLeft(game.startedAt && getTimeLeft(game.startedAt)), 1000)
+    setTimeout(() => setTimeLeft(game.started_at && getTimeLeft(game.started_at)), 1000)
   }, [timeLeft])
 
   const backText = useMemo(() => {
     if (timeLeft && timeLeft > 1) return `${timeLeft - 1}...`
   }, [timeLeft])
 
-  const match = useMemo(() => (
-    hand.find(i => deck.includes(i))
-   ), [game, hand])
-
-  const [deckCard, setDeckCard ] = useState(deck)
-
-  useEffect(() => {
-    let mounted = true
-    setTimeout(() => {
-      if (!mounted) return
-      setDeckCard(deck)
-    }, 200)
-
-    return () => { mounted = false }
-  }, [deck])
-
   const handleChoice = useCallback(async (index: number) => {
-    if (!client || index !== match) return false
-    await client.post(`/api/games/${game.code}/moves`, { match: index, deck, hand })
+    const match = game.top_card.includes(hand[index])
+    if (!client || !match) return false
     return true
-  }, [match, deck, hand])
+  }, [game, hand])
 
-  if (!hand.length) return <p>Dealing...</p>
+  if (!hand || !hand.length) return <p>Dealing...</p>
 
   return (
-    <div className='game' key={game.code}>
-      <DobbleCard card={deckCard} size='small' faceup={true} />
+    <div className='game' key={game.id}>
+      <DobbleCard card={game.top_card} size='small' faceup={true} />
       <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice} />
-      <Scoreboard players={Object.values(game.players)} fixed={true} />
+      {/* <Scoreboard players={Object.values(game.players)} fixed={true} /> */}
     </div>
   )
 }

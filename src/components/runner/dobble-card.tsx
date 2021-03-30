@@ -59,14 +59,14 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = 
         <style jsx global>{`
           .card-wrapper {
             position: absolute;
-            top: 45%;
+            top: 50%;
             left: 0;
             right: 0;
             height: 45%;
           }
 
           .card-wrapper.small {
-            top: -20px;
+            top: 40px;
           }
 
           .dobble-card {

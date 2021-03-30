@@ -2,15 +2,15 @@ import * as Fathom from 'fathom-client'
 import { Block, Button, Heading, Tag } from 'rbx'
 import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
 import { User } from "~/types/api"
-import { GameEntityWithPlayers } from "~/types/entities"
+import { GameEntityWithMeta } from "~/types/entities"
 import { GameStatus, Player } from "~/types/game"
 import { fi } from '~/util'
-import { useClient } from "~/util/use-client"
+import { DataClient } from '../services/data-client'
 import { DobbleTitle } from "./title"
 import { Wrapper } from "./wrapper"
 
 type PreGameProps = {
-  game: GameEntityWithPlayers
+  game: GameEntityWithMeta
   user: User
   players: Record<string, Player>
 }
@@ -18,16 +18,13 @@ type PreGameProps = {
 const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
-  const client = useClient()
+  const client = DataClient.useClient()
 
   const startGame = useCallback(() => {
     if (!client) return
     setLoading(true)
     Fathom.trackGoal('MFTZ2U9V', 0)
-    client.patch(`/api/games/${game.id}`, {
-      players: Object.values(players),
-      state: GameStatus.Playing
-    })
+    client.startGame(game)
   }, [client, players])
 
   const copyCode = useCallback(() => {
