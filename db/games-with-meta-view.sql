@@ -12,5 +12,4 @@ create or replace view games_with_meta as
     from plays
     order by game_id, position desc
   ) as plays
-  on plays.game_id = games.id;
-
+  on plays.game_id = games.id

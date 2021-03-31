@@ -10,6 +10,7 @@ export interface GameEntity {
   started_at?: Date
   finished_at?: Date
   winner_id?: string
+  next_game_id?: string
 }
 
 export interface GameEntityWithMeta extends GameEntity {

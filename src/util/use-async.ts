@@ -4,13 +4,13 @@ type Deps = Record<string, unknown | undefined>
 
 const allArePresent = <Hsh extends Deps>(hsh?: Hsh): hsh is Required<Hsh> => {
   if (!hsh) return false
-  return Object.values(hsh).every(i => typeof i !== 'undefined')
+  return Object.values(hsh).every(i => typeof i !== 'undefined' && i !== null)
 }
 
 export function useAsyncFetch<T, D extends Deps> (
   fetcher: (deps: Required<D>) => (Promise<T> | undefined),
   done: (data: T) => void,
-  errorHandler?: (error: Error) => void,
+  errorHandler?: ((error: Error) => void) | null,
   dependencies?: D
 ): void {
   const defaultErrorHandler = () => {}

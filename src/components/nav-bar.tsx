@@ -13,12 +13,12 @@ export const NavBar: FC = () => {
         <Link href="/" passHref>
           <Navbar.Item className={styles.logo}>Dobble</Navbar.Item>
         </Link>
-        <Navbar.Burger />
+        { user && <Navbar.Burger /> }
       </Navbar.Brand>
       { user &&
         <Navbar.Menu>
           <Navbar.Segment align='end'>
-            <Navbar.Item as='span'><strong>{ user.name }</strong></Navbar.Item>
+            <Navbar.Item as='span' className='has-text-weight-semibold'>{ user.name }</Navbar.Item>
             <Link passHref href="/logout"><Navbar.Item>Sign Out</Navbar.Item></Link>
           </Navbar.Segment>
         </Navbar.Menu>

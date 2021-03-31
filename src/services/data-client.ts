@@ -122,7 +122,7 @@ export class DataClient {
   async getGame (gameId: string): Promise<GameEntityWithMeta | undefined> {
     const { data, error } = await this.client
       .from<GameEntityWithMeta>('games_with_meta')
-      .select('*, players!game_memberships(*)')
+      .select('*')
       .eq('id', gameId)
       .eq('players.game_id' as keyof GameEntityWithMeta, gameId)
       .single()
@@ -151,6 +151,18 @@ export class DataClient {
       .eq('user_id', userId)
 
     if (error) throw error
+  }
+
+  async goToNextGame (userId: string, gameId: string): Promise<string> {
+    const { id: next_game_id } = await this.createGame(userId)
+    const { error } = await this.client
+      .from<GameEntity>('games')
+      .update({ next_game_id }, { returning: 'minimal' })
+      .eq('id', gameId)
+
+    if (error) throw error
+
+    return next_game_id
   }
 
   subscribeToGame (originalGame: GameEntityWithMeta, update: (game: GameEntityWithMeta) => void): () => void {
