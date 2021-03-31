@@ -1,15 +1,16 @@
-import React, { ChangeEvent, useState, useCallback, KeyboardEvent } from "react"
-import Link from 'next/link'
-import Router from 'next/router'
-import { Field, Label, Control, Input, Button } from 'rbx'
-import { Wrapper } from "~/components/wrapper"
-import { DobbleTitle } from '~/components/title'
-import { fi } from "~/util"
 import { NextPage } from "next"
-import { GlobalState } from "../services/state"
+import Link from 'next/link'
+import { useRouter } from "next/router"
+import { Button, Control, Field, Input, Label } from 'rbx'
+import React, { ChangeEvent, useCallback, useState } from "react"
+import { DobbleTitle } from '~/components/title'
+import { Wrapper } from "~/components/wrapper"
+import { fi } from "~/util"
 import { DataClient } from "../services/data-client"
+import { GlobalState } from "../services/state"
 
 const Index: NextPage = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState('')
   const [err, setErr] = useState<Error>()
@@ -29,20 +30,19 @@ const Index: NextPage = () => {
     }
   }, [])
 
-  const goToGame = useCallback(
-    code => {
-      if (!code) return
-      setLoading(true)
-      Router.push('/game/[code]', `/game/${code}`)
-    }, []
-  )
+  const goToGame = useCallback((id = code) => {
+    if (!id) return false
+
+    setLoading(true)
+    router.push(`/game/${id}`)
+  }, [code])
 
   return (
     <Wrapper>
       <DobbleTitle text="Dobble">
         <Link href='/about'><Button color='light' as='a'>💜 About</Button></Link>
       </DobbleTitle>
-      <div className="begin-option">
+      <form action={`/game/${code}`} className="begin-option" onSubmit={e => { e.preventDefault(); goToGame() }}>
         <Label>Already got a game code?</Label>
         <Field kind="group">
           <Control expanded>
@@ -52,14 +52,13 @@ const Index: NextPage = () => {
               placeholder="Your game code"
               value={code}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
-              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && goToGame(code)}
             />
           </Control>
           <Control>
-            <Button state={fi(loading, 'loading')} onClick={() => goToGame(code)}>Join</Button>
+            <Button state={fi(loading, 'loading')}>Join</Button>
           </Control>
         </Field>
-      </div>
+      </form>
       <div className="begin-option">
         <Field>
           <Label>Or create a new game</Label>

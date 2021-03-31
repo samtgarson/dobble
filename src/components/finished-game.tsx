@@ -27,15 +27,15 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user,
   const duration  = useMemo(() => {
     if (!game.started_at || !game.finished_at) return
 
-      const duration = intervalToDuration({ start: game.started_at, end: game.finished_at })
-      return formatDuration(duration, { format: ['hours', 'minutes', 'seconds'] })
+    const duration = intervalToDuration({ start: game.started_at, end: game.finished_at })
+    return formatDuration(duration, { format: ['hours', 'minutes', 'seconds'] })
   }, [game])
 
   const newGame = useCallback(async () => {
     if (!client) return
     setLoading(true)
     try {
-      const nextGameId = await client.goToNextGame(user.id, game.id)
+      const nextGameId = await client.createAnotherGame(user.id, game.id)
       router.push(`/game/${nextGameId}`)
     } catch (e) {
       if (!e) return
@@ -66,7 +66,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user,
         { nextGame
           ? <>
               <Link passHref href={`/game/${nextGame.id}`}>
-                <Button as='a' size='medium' color="primary">{ players[nextGame.owner_id].name } has created a new game.<span className='join-link has-text-weight-bold'>Join now</span></Button>
+                <Button as='a' size='medium' color="primary">{ players[nextGame.owner_id].name } started a new game.<span className='join-link has-text-weight-bold'>Join now</span></Button>
               </Link>
             </>
           : <Button color="success" onClick={newGame} state={fi(loading, 'loading')}>Start a new game</Button>

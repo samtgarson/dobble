@@ -1,6 +1,5 @@
-import { SupabaseClient, SupabaseRealtimePayload } from "@supabase/supabase-js"
+import { createClient, SupabaseClient, SupabaseRealtimePayload } from "@supabase/supabase-js"
 import { addSeconds } from "date-fns"
-import { useSupabase } from "use-supabase"
 import { User } from "~/types/api"
 import { GameEntity, GameEntityWithMeta, GameMembershipEntity, PlayEntity, Players } from "~/types/entities"
 import { Card, Deck, GameStatus, Player } from "~/types/game"
@@ -9,7 +8,8 @@ import { Dealer } from "./dealer"
 
 export class DataClient {
   static useClient (): DataClient {
-    const client = useSupabase()
+    const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
+
     return new DataClient(client)
   }
 
@@ -153,7 +153,7 @@ export class DataClient {
     if (error) throw error
   }
 
-  async goToNextGame (userId: string, gameId: string): Promise<string> {
+  async createAnotherGame (userId: string, gameId: string): Promise<string> {
     const { id: next_game_id } = await this.createGame(userId)
     const { error } = await this.client
       .from<GameEntity>('games')
@@ -169,6 +169,7 @@ export class DataClient {
     let game = originalGame
     const save = (g: GameEntityWithMeta) => {
       game = hydrate(g)
+      console.log('saving game', game)
       update(game)
     }
 
@@ -192,6 +193,7 @@ export class DataClient {
     let players = originalPlayers
     const save = (p: Players) => {
       players = hydrate(p)
+      console.log('saving players', players)
       update(players)
     }
 
