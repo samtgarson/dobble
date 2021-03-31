@@ -1,36 +1,37 @@
-import React, { FunctionComponent, useMemo, useState, useCallback, useEffect } from 'react'
-import { Game } from '~/types/game'
-import { User } from '~/types/api'
-import { Wrapper } from './wrapper'
-import { Title, Button } from 'rbx'
-import { Scoreboard } from './runner/scoreboard'
-import { getTimeLeft, fi } from '~/util'
-import { useClient } from '~/util/use-client'
+import { formatDuration, intervalToDuration } from 'date-fns'
 import * as Fathom from 'fathom-client'
+import { Button, Title } from 'rbx'
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
+import { User } from '~/types/api'
+import { GameEntityWithMeta, Players } from '~/types/entities'
+import { Game } from '~/types/game'
+import { fi } from '~/util'
+import { useClient } from '~/util/use-client'
+import { Scoreboard } from './runner/scoreboard'
+import { Wrapper } from './wrapper'
 
 type FinishedGameProps = {
-  game: Game
+  game: GameEntityWithMeta
   user: User
+  players: Players
 }
 
-export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user }) => {
+export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user, players }) => {
   const [loading, setLoading] = useState(false)
   const client = useClient()
-  const winner = useMemo(() => game.winner && game.players[game.winner], [game])
+  const winner = useMemo(() => game.winner_id && players[game.winner_id], [game])
   const duration  = useMemo(() => {
-    if (!game.startedAt) return
+    if (!game.started_at || !game.finished_at) return
 
-    const seconds = Math.abs(getTimeLeft(game.startedAt, game.finishedAt))
-    const minutes = Math.floor(seconds / 60)
-    const remainder = seconds - (minutes * 60)
-    return `${minutes}m ${remainder}s`
+      const duration = intervalToDuration({ start: game.started_at, end: game.finished_at })
+      return formatDuration(duration, { format: ['hours', 'minutes', 'seconds'] })
   }, [game])
 
   const newGame = useCallback(async () => {
     if (!client) return
     setLoading(true)
     try {
-      await client.post<Game>(`/api/games?previousGame=${game.code}`)
+      await client.post<Game>(`/api/games?previousGame=${game.id}`)
     } catch (e) {
       if (!e) return
       setLoading(false)
@@ -48,7 +49,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user 
         { winner.id === user.id ? '🎉 You won! ' : `😞 ${winner.name} won ` }
         { duration && <span>(in {duration})</span> }
       </Title>
-      <Scoreboard players={Object.values(game.players)} />
+      <Scoreboard players={players} />
       <div className="button-wrapper">
         <Button color="success" onClick={newGame} state={fi(loading, 'loading')}>Start a new game</Button>
       </div>

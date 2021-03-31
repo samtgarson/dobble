@@ -10,7 +10,7 @@ export const NavBar: FC = () => {
   return (
     <Navbar color='primary' className={styles.navbar}>
       <Navbar.Brand>
-        <Link href="/">
+        <Link href="/" passHref>
           <Navbar.Item className={styles.logo}>Dobble</Navbar.Item>
         </Link>
         <Navbar.Burger />
@@ -18,7 +18,8 @@ export const NavBar: FC = () => {
       { user &&
         <Navbar.Menu>
           <Navbar.Segment align='end'>
-            <Navbar.Item>{ user.name }</Navbar.Item>
+            <Navbar.Item as='span'><strong>{ user.name }</strong></Navbar.Item>
+            <Link passHref href="/logout"><Navbar.Item>Sign Out</Navbar.Item></Link>
           </Navbar.Segment>
         </Navbar.Menu>
       }

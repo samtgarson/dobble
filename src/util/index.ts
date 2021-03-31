@@ -1,6 +1,4 @@
 import { differenceInSeconds } from "date-fns"
-import { GameEntityWithMeta } from "~/types/entities"
-import { Player } from "~/types/game"
 
 export const shuffle = <T>(a: T[]): T[] => a
   .sort(() => 0.5 - Math.random())
@@ -12,9 +10,6 @@ export const fi = <T extends unknown | undefined, R>(conditional: T, result: R):
 export const getTimeLeft = (fromDate?: Date, toDate?: Date): number => {
   if (!fromDate) return 0
 
-  return differenceInSeconds(toDate ?? new Date(), fromDate)
+  return differenceInSeconds(fromDate, toDate ?? new Date())
 }
 
-export const playersFrom = (game: GameEntityWithMeta): Record<string, Player> => (
-  game.players.reduce<Record<string, Player>>((hsh, player) => ({ ...hsh, [player.id]: player }), {})
-)

@@ -1,9 +1,9 @@
-import { SupabaseClient } from "@supabase/supabase-js"
+import { SupabaseClient, SupabaseRealtimePayload } from "@supabase/supabase-js"
 import { addSeconds } from "date-fns"
 import { useSupabase } from "use-supabase"
 import { User } from "~/types/api"
-import { GameEntity, GameEntityWithMeta, PlayEntity } from "~/types/entities"
-import { Card, GameStatus } from "~/types/game"
+import { GameEntity, GameEntityWithMeta, GameMembershipEntity, PlayEntity, Players } from "~/types/entities"
+import { Card, Deck, GameStatus, Player } from "~/types/game"
 import { hydrate } from "../util/hydrate"
 import { Dealer } from "./dealer"
 
@@ -29,6 +29,30 @@ export class DataClient {
     return hydrate(data)
   }
 
+  async getPlayer (userId: string, gameId: string): Promise<Player | null> {
+    const { data, error } = await this.client
+      .from<Player>('players')
+      .select('*')
+      .eq('id', userId)
+      .eq('game_id', gameId)
+      .single()
+
+    if (error) throw error
+    return hydrate(data)
+  }
+
+  async getPlayers (gameId: string): Promise<Players> {
+    const { data, error } = await this.client
+      .from<Player>('players')
+      .select('*')
+      .eq('game_id', gameId)
+
+    if (error) throw error
+    if (!data) return {}
+
+    return data.reduce<Players>((hsh, p) => ({ ...hsh, [p.id]: p }), {})
+  }
+
   async joinGame (userId: string, gameId: string): Promise<void> {
     const { error } = await this.client
       .from('game_memberships')
@@ -37,8 +61,9 @@ export class DataClient {
     if (error) throw error
   }
 
-  async startGame (game: GameEntityWithMeta): Promise<void> {
-    const dealer = new Dealer(game.players.length)
+  async startGame (game: GameEntityWithMeta, players: Players): Promise<void> {
+    const playerList = Object.values(players)
+    const dealer = new Dealer(playerList.length)
     const { firstCard, hands } = dealer.run()
 
     const assignHands = hands.map(async (hand, i) => {
@@ -46,7 +71,7 @@ export class DataClient {
         .from('game_memberships')
         .update({ hand }, { returning: 'minimal' })
         .eq('game_id', game.id)
-        .eq('user_id', game.players[i].id)
+        .eq('user_id', playerList[i].id)
 
       if (error) throw error
     })
@@ -58,6 +83,16 @@ export class DataClient {
       .from<GameEntity>('games')
       .update({ started_at: startedAt, state: GameStatus.Playing }, { returning: 'minimal' })
       .eq('id', game.id)
+
+    if (error) throw error
+  }
+
+  async finishGame (gameId: string, userId: string): Promise<void> {
+    const newAttrs = { winner_id: userId, state: GameStatus.Finished, finished_at: new Date() }
+    const { error } = await this.client
+      .from<GameEntity>('games')
+      .update(newAttrs, { returning: 'minimal' })
+      .eq('id', gameId)
 
     if (error) throw error
   }
@@ -87,7 +122,7 @@ export class DataClient {
   async getGame (gameId: string): Promise<GameEntityWithMeta | undefined> {
     const { data, error } = await this.client
       .from<GameEntityWithMeta>('games_with_meta')
-      .select('*, players(*)')
+      .select('*, players!game_memberships(*)')
       .eq('id', gameId)
       .eq('players.game_id' as keyof GameEntityWithMeta, gameId)
       .single()
@@ -98,36 +133,72 @@ export class DataClient {
     return hydrate(data)
   }
 
+  async playCard (gameId: string, player: Player, position: number): Promise<void> {
+    const card = player.hand.shift()
+    if (!card) return
+
+    await this.createPlay(gameId, player.id, position, card)
+    await this.updateHand(player.id, gameId, player.hand)
+
+    if (player.hand.length == 0) this.finishGame(gameId, player.id)
+  }
+
+  async updateHand (userId: string, gameId: string, hand: Deck): Promise<void> {
+    const { error } = await this.client
+      .from('game_memberships')
+      .update({ hand })
+      .eq('game_id', gameId)
+      .eq('user_id', userId)
+
+    if (error) throw error
+  }
+
   subscribeToGame (originalGame: GameEntityWithMeta, update: (game: GameEntityWithMeta) => void): () => void {
     let game = originalGame
     const save = (g: GameEntityWithMeta) => {
-      console.log(g)
       game = hydrate(g)
       update(game)
     }
 
-    this.client.from<GameEntity>(`games:id=eq.${game.id}`).on(
+    const gameSub = this.client.from<GameEntity>(`games:id=eq.${game.id}`).on(
       'UPDATE',
       payload => save({ ...game, ...payload.new })
     ).subscribe()
 
-    this.client.from(`game_memberships:game_id=eq.${game.id}`).on(
-      '*',
-      async _ => {
-        const newGame = await this.getGame(game.id)
-        if (newGame) save(newGame)
-      }
-    ).subscribe()
-
-    this.client.from<PlayEntity>(`plays:game_id=eq.${game.id}`).on(
+    const playSub = this.client.from<PlayEntity>(`plays:game_id=eq.${game.id}`).on(
       'INSERT',
-      payload => save({ ...game, top_card: payload.new.card })
+      payload => save({ ...game, top_card: payload.new.card, position: payload.new.position })
     ).subscribe()
 
     return () => {
-      this.client.getSubscriptions().forEach(sub =>
-        this.client.removeSubscription(sub)
-      )
+      this.client.removeSubscription(gameSub)
+      this.client.removeSubscription(playSub)
     }
   }
+
+  subscribeToPlayers (gameId: string, originalPlayers: Players, update: (players: Players) => void): () => void {
+    let players = originalPlayers
+    const save = (p: Players) => {
+      players = hydrate(p)
+      update(players)
+    }
+
+    const sub = this.client.from<GameMembershipEntity>(`game_memberships:game_id=eq.${gameId}`)
+      .on('UPDATE', async payload => {
+        const { hand, user_id } = payload.new
+        save({ ...players, [user_id]: { ...players[user_id], hand } })
+      })
+      .on('INSERT', async (payload: SupabaseRealtimePayload<GameMembershipEntity>) => {
+        const player = await this.getPlayer(payload.new.user_id, gameId)
+        if (!player) return
+
+        save({ ...players, [player.id]: player })
+      })
+      .subscribe()
+
+    return () => {
+      this.client.removeSubscription(sub)
+    }
+  }
+
 }

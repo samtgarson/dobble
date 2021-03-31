@@ -1,31 +1,39 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import PreGame from '~/components/pre-game'
 import Runner from '~/components/runner'
 import { Wrapper } from '~/components/wrapper'
 import { GlobalState } from '~/services/state'
+import { FinishedGame } from '~/src/components/finished-game'
+import { Scoreboard } from '~/src/components/runner/scoreboard'
 import { DataClient } from '~/src/services/data-client'
-import { playersFrom } from '~/src/util'
 import { useAsyncFetch } from '~/src/util/use-async'
 import { User } from '~/types/api'
-import { GameEntityWithMeta } from '~/types/entities'
+import { GameEntityWithMeta, Players } from '~/types/entities'
 import { GameStatus } from '~/types/game'
 
 type RenderGameProps = {
   game: GameEntityWithMeta
   user: User
+  players: Players
+  reload (): void
 }
 
-const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user }) => {
-  const players = playersFrom(game)
+const RenderGame: FunctionComponent<RenderGameProps> = ({ game, players, user, reload }) => {
   switch (game.state) {
     case GameStatus.Open:
       return <PreGame user={user} game={game} players={players} />
     case GameStatus.Playing:
-      return <Runner game={game} user={players[user.id]} />
-    {/* case GameStatus.Finished: */}
-    {/*   return <FinishedGame game={game} user={user} /> */}
+      return (
+        <>
+          <Runner game={game} player={players[user.id]} reload={reload} />
+          <Scoreboard players={players} fixed={true} />
+        </>
+      )
+    case GameStatus.Finished:
+      return <FinishedGame game={game} user={user} players={players} />
     default:
       return (
         <Wrapper>
@@ -35,6 +43,12 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, user }) => {
   }
 }
 
+const GameError = () => (
+  <Wrapper>
+    <p>👀 Couldn&apos;t find that game</p>
+  </Wrapper>
+)
+
 const GamePage: NextPage = () => {
   const router = useRouter()
   const { code } = router.query as { code?: string }
@@ -42,7 +56,11 @@ const GamePage: NextPage = () => {
   const client = DataClient.useClient()
 
   const [game, setGame] = useState<GameEntityWithMeta>()
+  const [players, setPlayers] = useState<Players>()
   const [err, setErr] = useState(false)
+  const subs = useRef<(() => void)[]>([])
+
+  const member = players && user && players[user.id]
 
   useAsyncFetch(
     ({ code }) => client.getGame(code),
@@ -51,42 +69,53 @@ const GamePage: NextPage = () => {
     { code } as { code?: string }
   )
 
+  useAsyncFetch(
+    ({ gameId }) => client.getPlayers(gameId),
+    setPlayers,
+    () => setErr(true),
+    { gameId: game?.id } as { gameId?: string }
+  )
+
   useEffect(() => {
-    if (!game || !user) return
-    if (game.players.find(p => p.id === user.id)) return
+    if (!game || !user || !players || member) return
     if (game.state !== GameStatus.Open) return setErr(true)
 
     const joinGame = async () => {
       await client.joinGame(user.id, game.id)
-      setGame({ ...game, players: [
-        ...game.players,
-        { ...user, game_id: game.id, hand: [] }
-      ] })
+      setPlayers({ ...players, [user.id]: { game_id: game.id, id: user.id, name: user.name, hand: [] } })
     }
 
     joinGame()
-  }, [user, game])
+  }, [user, game, players])
 
   useEffect(() => {
-    if (!game) return
+    if (!game || !players) return
     let mounted = true
-    const unsubscribe = client.subscribeToGame(game, g => mounted && setGame(g))
+    const unsubscribeGame = client.subscribeToGame(game, g => mounted && setGame(g))
+    const unsubscribePlayers = client.subscribeToPlayers(game.id, players, p => mounted && setPlayers(p))
 
-    return () => {
-      mounted = false
-      unsubscribe()
-    }
-  }, [game?.id])
+    subs.current = [unsubscribeGame, unsubscribePlayers]
+    return () => { mounted = false }
+  }, [game, member, players])
 
-  if (err) return (
-    <Wrapper>
-      <p>👀 Couldn&apos;t find that game</p>
-    </Wrapper>
+  useEffect(() => {
+    return () => subs.current.forEach(fn => fn())
+  }, [])
+
+  const reload = useCallback(async () => {
+    if (!game) return
+    const g = await client.getGame(game.id)
+    setGame(g)
+  }, [game])
+
+  if (!user || !game || !players) return null
+  if (err || !member) return <GameError />
+
+  return (
+    <ErrorBoundary FallbackComponent={GameError}>
+      <RenderGame game={game} user={user} players={players} reload={reload} />
+    </ErrorBoundary>
   )
-
-  if (!user || !game) return null
-
-  return <RenderGame game={game} user={user} />
 }
 
 export default GamePage

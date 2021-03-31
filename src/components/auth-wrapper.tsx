@@ -10,11 +10,10 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
   const { user, loaded } = GlobalState.useContainer()
 
   if (!loaded) return <></>
-  if (!user) return <Welcome />
 
   return (
     <SupabaseContextProvider client={supabase}>
-      { children }
+      { user ? children : <Welcome /> }
     </SupabaseContextProvider>
   )
 }

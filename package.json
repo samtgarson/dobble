@@ -32,6 +32,7 @@
     "rbx": "^2.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-error-boundary": "^3.1.1",
     "source-map-support": "^0.5.19",
     "unstated-next": "^1.1.0",
     "use-supabase": "^1.0.3",

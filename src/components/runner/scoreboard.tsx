@@ -1,17 +1,17 @@
-import { Player } from "~/types/game"
 import React, { FunctionComponent, useMemo } from "react"
+import { Players } from "~/types/entities"
 import { fi } from "~/util"
 
 type ScoreboardProps = {
-  players: Player[]
+  players: Players
   fixed?: boolean
 }
 
 const medals = ['🥇', '🥈', '🥉']
 
 export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, fixed }) => {
-  const scores = useMemo(() => players
-   .map(p => ({ name: p.name, score: p.hand.length, id: p.id }))
+  const scores = useMemo(() => Object.values(players)
+    .map(p => ({ name: p.name, score: p.hand.length, id: p.id }))
     .sort((a, b) => a.score - b.score),
   [players])
 

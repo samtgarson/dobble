@@ -4,7 +4,6 @@ import { User } from '~/types/api'
 
 export interface State {
   user?: User
-  token?: string
   loaded: boolean
 }
 
