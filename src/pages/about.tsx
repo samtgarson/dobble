@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { DobbleTitle } from '~/components/title'
 import { Wrapper } from '~/components/wrapper'
 import { NextPage } from 'next'
+import styles from '~/styles/pages/about.module.scss'
 
 const About: NextPage = () => (
-  <Wrapper>
+  <Wrapper className={styles.about}>
     <DobbleTitle text='About'>
       <Link href="/"><Button color='light' as='a'>Back</Button></Link>
     </DobbleTitle>
@@ -28,24 +29,9 @@ const About: NextPage = () => (
     A colleague brought in the real game of Dobble to our digital product team to introduce an element of fun and build our team. It worked really well, and we found ourselves playing Dobble whenever we needed a quick break.
     </p>
     <p>
-    With the advent of COVID-19 we can no longer play Dobble while working from home, so I attempted to build a version we could play while in quarantine.
+    With the advent of COVID-19 we could no longer play Dobble while working from home, so I attempted to build a version we could play while in quarantine.
     </p>
     <p>Build with 💜 by <a href="https://samgarson.com">Sam Garson</a>.</p>
-    <style jsx>{`
-      :global(h1.is-6) {
-        margin-top: 30px;
-        margin-bottom: 10px !important;
-      }
-
-      p {
-        margin-bottom: 10px;
-      }
-
-      a {
-        color: #6600ff;
-        font-weight: bold;
-      }
-      `}</style>
   </Wrapper>
 )
 

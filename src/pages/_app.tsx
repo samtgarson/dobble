@@ -46,14 +46,6 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <Component {...pageProps} />
         </AuthWrapper>
       </AnimatePresence>
-      <style jsx global>{`
-        body, html {
-          min-height: 100vh;
-          min-height: -webkit-max-available;
-          background-color: var(--purple);
-        }
-        `}
-      </style>
     </GlobalState.Provider>
   )
 }

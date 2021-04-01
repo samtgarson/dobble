@@ -1,0 +1,57 @@
+.scoreboard.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  color: white;
+}
+
+.fixed ul {
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: flex-start;
+  padding-bottom: 3px;
+}
+
+.fixed li {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  padding: 3px 12px 3px 8px;
+  transition: color .2s ease, background-color .2s ease;
+}
+
+.fixed .warning {
+  border-radius: 20px;
+  background: white;
+  color: red;
+  animation: shake .5s linear;
+}
+
+.name {
+  font-weight: bold;
+  margin: 0 4px;
+  transition: color .2s ease;
+}
+
+.fixed .name {
+  margin: 0 4px 0 2px;
+  color: white;
+}
+
+.fixed .warning .name {
+  color: red;
+}
+
+.scoreboard:not(.fixed) .medal {
+  display: inline-block;
+  width: 24px;
+}
+
+.scoreboard:not(.fixed) li {
+  margin-bottom: 10px;
+}
+

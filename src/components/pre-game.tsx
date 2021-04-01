@@ -65,12 +65,6 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         )}
         <Button size="small" state="loading" color="light" className="tag"></Button>
       </Tag.Group>
-      <style jsx>{`
-        :global(.start-button) {
-          height: auto;
-          white-space: normal;
-        }
-      `}</style>
     </Wrapper>
   )
 }

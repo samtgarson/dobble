@@ -59,24 +59,22 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user,
     <Wrapper>
       <Title>
         { winner.id === user.id ? '🎉 You won! ' : `😞 ${winner.name} won ` }
-        { duration && <span>(in {duration})</span> }
+        { duration && <span style={{ fontWeight: 'normal' }}>(in {duration})</span> }
       </Title>
       <Scoreboard players={players} />
-      <div className="button-wrapper">
+      <div style={{ marginTop: 40 }}>
         { nextGame
           ? <>
               <Link passHref href={`/game/${nextGame.id}`}>
-                <Button as='a' size='medium' color="primary">{ players[nextGame.owner_id].name } started a new game.<span className='join-link has-text-weight-bold'>Join now</span></Button>
+                <Button as='a' size='medium' color="primary">
+                  { players[nextGame.owner_id].name } started a new game.
+                  <span style={{ marginLeft: 5, fontWeight: 'bold' }}>Join now</span>
+                </Button>
               </Link>
             </>
           : <Button color="success" onClick={newGame} state={fi(loading, 'loading')}>Start a new game</Button>
         }
       </div>
-      <style jsx>{`
-        span { font-weight: normal }
-        .button-wrapper { margin-top: 40px }
-        .join-link { margin-left: 5px; }
-      `}</style>
     </Wrapper>
   )
 }

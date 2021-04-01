@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useMemo, useCallback } from "react"
 import Symbols from '~/util/cards/symbols.json'
+import styles from '~/styles/components/dobble-icon.module.scss'
 
 type DobbleIconProps = {
   symbolIndex: number
@@ -43,7 +44,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
   return (
     <>
       <span
-        className="dobble-icon"
+        className={styles.icon}
         key={symbolIndex}
         onClick={onClick}
         style={{
@@ -52,46 +53,10 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
           transform: r(angle)
         }}
       >
-        <TagName style={{
+        <TagName className={styles[TagName]} style={{
           transform: `${r(angleSeed * -angle)} scale(${sizeSeed})`
         }}>{Symbols[symbolIndex]}</TagName>
       </span>
-
-      <style jsx>{`
-        .dobble-icon {
-          font-size: min(16vw, 9vh);
-          position: absolute;
-          display: block;
-          transform-origin: bottom center;
-          left: 50%;
-          margin-left: -10%;
-          line-height: 1em;
-          pointer-events: none;
-        }
-
-        button {
-          border: 0;
-          background: none;
-          padding: 0;
-          appearance: none;
-          font-size: inherit;
-          cursor: pointer;
-          outline: none;
-          font-family: 'Manrope', sans-serif;
-        }
-
-        @media (min-width: 444px) {
-          .dobble-icon {
-            font-size: 72px;
-          }
-        }
-
-        .dobble-icon span,
-        .dobble-icon button {
-          display: block;
-          pointer-events: auto;
-        }
-      `}</style>
     </>
   )
 }

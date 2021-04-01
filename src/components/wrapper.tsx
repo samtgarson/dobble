@@ -15,8 +15,8 @@ const transition = {
   duration: 0.2
 }
 
-export const Wrapper: FunctionComponent = ({ children }) => (
-  <Section className={styles.section}>
+export const Wrapper: FunctionComponent<{ className?: string }> = ({ children, className }) => (
+  <Section className={cn(styles.section, className)}>
     <motion.div
       className={cn('container', styles.container)}
       variants={variants}

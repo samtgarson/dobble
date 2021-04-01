@@ -42,7 +42,7 @@ const Index: NextPage = () => {
       <DobbleTitle text="Dobble">
         <Link href='/about'><Button color='light' as='a'>💜 About</Button></Link>
       </DobbleTitle>
-      <form action={`/game/${code}`} className="begin-option" onSubmit={e => { e.preventDefault(); goToGame() }}>
+      <form action={`/game/${code}`} style={{ marginBottom: 20 }} onSubmit={e => { e.preventDefault(); goToGame() }}>
         <Label>Already got a game code?</Label>
         <Field kind="group">
           <Control expanded>
@@ -66,11 +66,6 @@ const Index: NextPage = () => {
           { err && <p>{ err.message }</p> }
         </Field>
       </div>
-      <style jsx>{`
-      .begin-option {
-        margin-bottom: 20px;
-      }
-      `}</style>
     </Wrapper>
   )
 }
