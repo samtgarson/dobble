@@ -16,6 +16,8 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload }) => {
   const hand = useMemo(() => player.hand[0], [game, player])
   const [timeLeft, setTimeLeft] = useState(game.started_at && getTimeLeft(game.started_at))
   const client = DataClient.useClient()
+  const [topCard, setTopCard] = useState(game.top_card)
+  const [newCard, setNewCard] = useState(false)
 
   useEffect(() => {
     if (!timeLeft || timeLeft <= 0) return
@@ -27,6 +29,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload }) => {
   }, [timeLeft])
 
   const handleChoice = useCallback(async (icon: number) => {
+    if (newCard) return false
     const match = game.top_card.includes(icon)
     if (!client || !match) return false
 
@@ -37,14 +40,26 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload }) => {
       reload()
       return false
     }
-  }, [game, hand])
+  }, [game, hand, newCard])
+
+  useEffect(() => {
+    let mounted = true
+    setTopCard(game.top_card)
+    setNewCard(true)
+
+    setTimeout(() =>{
+      if (mounted) setNewCard(false)
+    }, 700)
+
+    return () => { mounted = false }
+  }, [game.top_card])
 
   if (!hand || !hand.length) return <Wrapper><p>🃏 Dealing...</p></Wrapper>
 
   return (
     <div className='game' key={game.id}>
-      <DobbleCard card={game.top_card} size='small' faceup={true} />
-      <DobbleCard card={hand} backText={backText} faceup={!backText} handleChoice={handleChoice} />
+      <DobbleCard card={topCard} size='small' backText='Ready...' faceUp={!newCard} hideForNew />
+      <DobbleCard card={hand} backText={backText} faceUp={!backText} handleChoice={handleChoice} />
     </div>
   )
 }

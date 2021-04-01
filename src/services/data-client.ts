@@ -169,7 +169,6 @@ export class DataClient {
     let game = originalGame
     const save = (g: GameEntityWithMeta) => {
       game = hydrate(g)
-      console.log('saving game', game)
       update(game)
     }
 
@@ -193,7 +192,6 @@ export class DataClient {
     let players = originalPlayers
     const save = (p: Players) => {
       players = hydrate(p)
-      console.log('saving players', players)
       update(players)
     }
 

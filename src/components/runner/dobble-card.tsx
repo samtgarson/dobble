@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { Card } from '~/types/game'
 import { fi } from '~/util'
 import { DobbleIcon } from './dobble-icon'
@@ -11,9 +11,10 @@ const cx = classNames.bind(styles)
 type DobbleCardProps = {
   card: Card
   handleChoice?: (index: number) => Promise<boolean>
-  faceup?: boolean
+  faceUp?: boolean
   size?: string
   backText?: string
+  hideForNew?: boolean
 }
 
 const variants: Variants = {
@@ -31,20 +32,20 @@ const variants: Variants = {
   }
 }
 
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceup = false, size, backText, handleChoice }) => {
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, size, backText, handleChoice }) => {
   const prefix = useMemo(() => card.join('-'), [card])
 
   return (
     <motion.div
       key={prefix}
-      variants={backText ? {} : variants}
+      variants={variants}
       initial='initial'
       animate='animate'
       exit='exit'
       className={cx('card-wrapper', [size]) }
     >
       <div
-        className={cx('dobble-card', { faceup })}
+        className={cx('dobble-card', { faceup: faceUp })}
       >
         <div className={ cx('card-front') }>
           { card.map((index, i) => (
