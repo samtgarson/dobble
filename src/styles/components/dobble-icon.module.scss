@@ -1,5 +1,5 @@
 .icon {
-  font-size: min(16vw, 9vh);
+  font-size: 9vh;
   position: absolute;
   display: block;
   transform-origin: bottom center;
@@ -8,8 +8,8 @@
   line-height: 1em;
   pointer-events: none;
 
-  @media (min-width: 444px) {
-    font-size: 72px;
+  &.small {
+    font-size: 6vh;
   }
 }
 

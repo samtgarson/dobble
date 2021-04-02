@@ -1,11 +1,15 @@
 import React, { FunctionComponent, useMemo, useCallback } from "react"
 import Symbols from '~/util/cards/symbols.json'
 import styles from '~/styles/components/dobble-icon.module.scss'
+import cn from "classnames/bind"
+
+const cx = cn.bind(styles)
 
 type DobbleIconProps = {
   symbolIndex: number
   cardIndex: number
   handleChoice?: () => Promise<boolean>
+  small?: boolean
 }
 
 const r = (n: number) => `rotate(${n}deg)`
@@ -14,7 +18,7 @@ const generateSeed = (min: number, max: number) => (
   Math.random() * (max - min) +min
 )
 
-export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, cardIndex, handleChoice }) => {
+export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, cardIndex, handleChoice, small }) => {
   const { angle, h, angleSeed, sizeSeed } = useMemo(() => {
     // create two rows
     const inner = cardIndex < 3
@@ -44,7 +48,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
   return (
     <>
       <span
-        className={styles.icon}
+        className={cx('icon', { small })}
         key={symbolIndex}
         onClick={onClick}
         style={{

@@ -7,19 +7,19 @@ const cx = cn.bind(styles)
 
 type ScoreboardProps = {
   players: Players
-  fixed?: boolean
+  banner?: boolean
 }
 
 const medals = ['🥇', '🥈', '🥉']
 
-export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, fixed }) => {
+export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, banner }) => {
   const scores = useMemo(() => Object.values(players)
     .map(p => ({ name: p.name, score: p.hand.length, id: p.id }))
     .sort((a, b) => a.score - b.score),
   [players])
 
   return (
-    <div className={cx('scoreboard', { fixed })}>
+    <div className={cx('scoreboard', { banner })}>
       <ul>
         {scores.map((s, i) => (
           <li key={s.id} className={cx({ warning: s.score < 4 })}>

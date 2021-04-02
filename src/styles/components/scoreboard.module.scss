@@ -1,8 +1,4 @@
-.scoreboard.fixed {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.scoreboard.banner {
   padding: 5px;
   display: flex;
   flex-flow: row nowrap;
@@ -10,21 +6,21 @@
   color: white;
 }
 
-.fixed ul {
+.banner ul {
   flex: 0 1 auto;
   display: flex;
   justify-content: flex-start;
   padding-bottom: 3px;
 }
 
-.fixed li {
+.banner li {
   flex: 0 0 auto;
   margin-left: 8px;
   padding: 3px 12px 3px 8px;
   transition: color .2s ease, background-color .2s ease;
 }
 
-.fixed .warning {
+.banner .warning {
   border-radius: 20px;
   background: white;
   color: red;
@@ -37,21 +33,21 @@
   transition: color .2s ease;
 }
 
-.fixed .name {
+.banner .name {
   margin: 0 4px 0 2px;
   color: white;
 }
 
-.fixed .warning .name {
+.banner .warning .name {
   color: red;
 }
 
-.scoreboard:not(.fixed) .medal {
+.scoreboard:not(.banner) .medal {
   display: inline-block;
   width: 24px;
 }
 
-.scoreboard:not(.fixed) li {
+.scoreboard:not(.banner) li {
   margin-bottom: 10px;
 }
 

@@ -7,7 +7,7 @@ import { Wrapper } from '~/components/wrapper'
 import { GlobalState } from '~/services/state'
 import { FinishedGame } from '~/src/components/finished-game'
 import { Scoreboard } from '~/src/components/runner/scoreboard'
-import { DataClient } from '~/src/services/data-client'
+import { DataClient } from '~/services/data-client'
 import { User } from '~/types/api'
 import { GameEntityWithMeta, Players } from '~/types/entities'
 import { GameStatus } from '~/types/game'
@@ -26,10 +26,9 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, players, user, r
       return <PreGame user={user} game={game} players={players} />
     case GameStatus.Playing:
       return (
-        <>
-          <Runner game={game} player={players[user.id]} reload={reload} />
-          <Scoreboard players={players} fixed={true} />
-        </>
+        <Runner game={game} player={players[user.id]} reload={reload}>
+          <Scoreboard players={players} banner={true} />
+        </Runner>
       )
     case GameStatus.Finished:
       return <FinishedGame game={game} user={user} players={players} />

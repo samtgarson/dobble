@@ -1,10 +1,11 @@
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react"
-import { DataClient } from "~/src/services/data-client"
+import { DataClient } from "~/services/data-client"
 import { GameEntityWithMeta } from "~/types/entities"
 import { Player } from "~/types/game"
 import { getTimeLeft } from "~/util"
 import { Wrapper } from "../wrapper"
 import { DobbleCard } from "./dobble-card"
+import styles from '~/styles/components/dobble-card.module.scss'
 
 type RunnerProps = {
   game: GameEntityWithMeta
@@ -12,7 +13,7 @@ type RunnerProps = {
   reload (): void
 }
 
-const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload }) => {
+const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children }) => {
   const hand = useMemo(() => player.hand[0], [game, player])
   const [timeLeft, setTimeLeft] = useState(game.started_at && getTimeLeft(game.started_at))
   const client = DataClient.useClient()
@@ -57,9 +58,10 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload }) => {
   if (!hand || !hand.length) return <Wrapper><p>🃏 Dealing...</p></Wrapper>
 
   return (
-    <div className='game' key={game.id}>
+    <div className={styles.game}>
       <DobbleCard card={topCard} size='small' backText='Ready...' faceUp={!newCard} hideForNew />
       <DobbleCard card={hand} backText={backText} faceUp={!backText} handleChoice={handleChoice} />
+      { children }
     </div>
   )
 }

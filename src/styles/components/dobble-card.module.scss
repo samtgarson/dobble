@@ -1,25 +1,45 @@
+.game {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  flex: 1;
+}
+
 .card-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 45%;
+  position: relative;
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
+  max-height: 90vw
 }
 
 .card-wrapper.small {
-  top: 40px;
+  flex-grow: 2;
+  max-height: 70vw
+}
+
+.svg {
+  width: auto;
+  height: 100%;
+  z-index: -1;
+
+  -webkit-filter:
+    drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
+    drop-shadow(0 0 1px rgba(10, 10, 10, 0.2));
+  filter:
+    drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
+    drop-shadow(0 0 1px rgba(10, 10, 10, 0.2));
+
 }
 
 .dobble-card {
-  width: 400px;
-  max-width: min(90vw, 45vh);
-  height: 400px;
-  max-height: min(90vw, 45vh);
   margin: 0 auto;
-  position: relative;
+  position: absolute;
+  left: 50%;
   transform: rotateY(180deg);
   transform-style: preserve-3d;
   transition: transform .3s ease-in-out;
+  height: 90%;
 }
 
 .dobble-card.faceup {
@@ -29,46 +49,38 @@
 .card-front,
 .card-back {
   backface-visibility: hidden;
-  border-radius: 50%;
   position: absolute;
-  border-radius: 50%;
-  box-shadow:
-    0px 3px 9px 1px rgba(10, 10, 10, 0.1),
-    0 0 0 1px rgba(10, 10, 10, 0.1);
-  left: 0;
+  left: 50%;
   top: 0;
-  width: 100%;
   height: 100%;
-}
-
-.small .card-front {
-  transform: scale(0.8);
+  z-index: 0;
+  transform: translateX(-50%);
+  transform-origin: 25% center;
 }
 
 .card-front {
-  background: white;
   z-index: 0;
 }
 
-.dobble-card.hidden .card-front {
-  z-index: 1;
-}
-
 .card-back {
-  background-color: #FF008C;
   color: white;
   transform: rotateY(180deg);
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   font-size: 1.2em;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: bold;
+
+  span {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+    z-index: 1
+  }
 }
 
 .small .card-back {
-  transform: rotateY(180deg) scale(0.8);
+  transform: rotateY(180deg);
 }
 
