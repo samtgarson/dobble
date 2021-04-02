@@ -19,6 +19,8 @@ export const NavBar: FC = () => {
         <Navbar.Menu>
           <Navbar.Segment align='end'>
             <Navbar.Item as='span' className='has-text-weight-semibold'>{ user.name }</Navbar.Item>
+            <Link passHref href="/help"><Navbar.Item>Help</Navbar.Item></Link>
+            <Link passHref href="/about"><Navbar.Item>About</Navbar.Item></Link>
             <Link passHref href="/logout"><Navbar.Item>Sign Out</Navbar.Item></Link>
           </Navbar.Segment>
         </Navbar.Menu>

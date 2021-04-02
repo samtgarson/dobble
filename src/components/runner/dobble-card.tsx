@@ -14,35 +14,20 @@ type DobbleCardProps = {
   faceUp?: boolean
   size?: string
   backText?: string
-  hideForNew?: boolean
+  rotate?: number
 }
 
-const variants: Variants = {
-  initial: {
-    rotateY: '180deg',
-    opacity: 0
-  },
-  animate: {
-    opacity: 1,
-    rotateY: '0deg'
-  },
-  exit: {
-    rotateY: '180deg',
-    opacity: 0
-  }
-}
-
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, size, backText, handleChoice }) => {
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, size, backText, handleChoice, rotate = 0 }) => {
   const prefix = useMemo(() => card.join('-'), [card])
 
   return (
     <motion.div
       key={prefix}
-      variants={variants}
-      initial='initial'
-      animate='animate'
-      exit='exit'
+      initial={{ rotateY: '180deg', opacity: 0 }}
+      animate={{ rotateY: '0deg', opacity: 1 }}
+      exit={{ rotateY: '180deg', opacity: 0 }}
       className={cx('card-wrapper', [size]) }
+      style={{ rotateZ: `${rotate}deg` }}
     >
       <div className={cx('dobble-card', { faceup: faceUp })}>
         <div className={ cx('card-front') }>

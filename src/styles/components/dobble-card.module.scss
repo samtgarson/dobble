@@ -3,6 +3,7 @@
   flex-flow: column nowrap;
   align-items: center;
   flex: 1;
+  overflow-y: hidden;
 }
 
 .card-wrapper {
@@ -10,7 +11,8 @@
   flex-grow: 3;
   display: flex;
   align-items: center;
-  max-height: 90vw
+  max-height: 90vw;
+  transition: transform .2s ease;
 }
 
 .card-wrapper.small {

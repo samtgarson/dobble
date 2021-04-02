@@ -19,6 +19,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
   const client = DataClient.useClient()
   const [topCard, setTopCard] = useState(game.top_card)
   const [newCard, setNewCard] = useState(false)
+  const [cardRotation, setCardRotation] = useState(0)
 
   useEffect(() => {
     if (!timeLeft || timeLeft <= 0) return
@@ -55,12 +56,35 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
     return () => { mounted = false }
   }, [game.top_card])
 
+  const rotationHandler = useCallback((e: KeyboardEvent) => {
+    console.log(e.code, cardRotation)
+    switch (e.code) {
+      case 'ArrowLeft':
+        return setCardRotation(cardRotation - 10)
+      case 'ArrowRight':
+        return setCardRotation(cardRotation + 10)
+      case 'Space':
+        return setCardRotation(0)
+    }
+  }, [cardRotation, setCardRotation])
+
+  useEffect(() => {
+    document.addEventListener('keydown', rotationHandler)
+    return () => { document.removeEventListener('keydown', rotationHandler) }
+  }, [rotationHandler])
+
   if (!hand || !hand.length) return <Wrapper><p>🃏 Dealing...</p></Wrapper>
 
   return (
     <div className={styles.game}>
-      <DobbleCard card={topCard} size='small' backText='Ready...' faceUp={!newCard} hideForNew />
-      <DobbleCard card={hand} backText={backText} faceUp={!backText} handleChoice={handleChoice} />
+      <DobbleCard card={topCard} size='small' backText='Ready...' faceUp={!newCard} />
+      <DobbleCard
+        card={hand}
+        backText={backText}
+        faceUp={!backText}
+        handleChoice={handleChoice}
+        rotate={cardRotation}
+      />
       { children }
     </div>
   )

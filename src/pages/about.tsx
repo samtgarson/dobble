@@ -1,15 +1,14 @@
+import { NextPage } from 'next'
+import { Button, Title } from 'rbx'
 import * as React from 'react'
-import { Title, Button } from 'rbx'
-import Link from 'next/link'
 import { DobbleTitle } from '~/components/title'
 import { Wrapper } from '~/components/wrapper'
-import { NextPage } from 'next'
-import styles from '~/styles/pages/about.module.scss'
+import styles from '~/styles/pages/page.module.scss'
 
 const About: NextPage = () => (
-  <Wrapper className={styles.about}>
+  <Wrapper className={styles.page}>
     <DobbleTitle text='About'>
-      <Link href="/"><Button color='light' as='a'>Back</Button></Link>
+      <Button color='light' onClick={() => window.history.back()}>Back</Button>
     </DobbleTitle>
     <p>
     This is an attempt to build a digital version of the kids&apos; card game <a href="https://www.asmodee.co.uk/featured-product/dobble/">Dobble</a>. It&apos;s <a href="https://github.com/samtgarson/dobble">open source</a> and definitely not affiliated with the official Dobble game, or Asmodee, the company that made it.

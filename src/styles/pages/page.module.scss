@@ -1,0 +1,33 @@
+.page {
+  h1 {
+    margin-bottom: 10px !important;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  a {
+    color: var(--purple);
+    font-weight: bold;
+  }
+}
+
+.keyHolder {
+  margin-top: 15px;
+  line-height: 2.5em;
+
+  td:last-child {
+    padding-left: 10px;
+  }
+}
+
+.keyIcon {
+  padding: 5px 8px;
+  margin-right: 10px;
+  border-radius: 3px;
+  border: 1px solid black;
+  text-transform: uppercase;
+  font-weight: bold;
+  vertical-align: middle;
+}
