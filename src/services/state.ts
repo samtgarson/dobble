@@ -1,6 +1,7 @@
 import { createContainer } from 'unstated-next'
 import { useReducer, useEffect, Dispatch } from 'react'
 import { User } from '~/types/api'
+import { logger } from '../util/logger'
 
 export interface State {
   user?: User
@@ -12,7 +13,9 @@ export type StateDispatch = Dispatch<Partial<State>>
 const STORAGE_KEY = 'dobble_state'
 
 const reducer = (state: State, newState: Partial<State>) => {
-  return { ...state, ...newState }
+  const s = { ...state, ...newState }
+  logger.debug('dispatch: ', s)
+  return s
 }
 
 const useGlobalState = () => {

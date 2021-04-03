@@ -16,18 +16,20 @@ const HelpPage: NextPage = () => (
 
     <Title size={6}>Keyboard Shortcuts</Title>
     <table className={styles.keyHolder}>
-      <tr>
-        <td><span className={styles.keyIcon} title="Left arrow key">←</span></td>
-        <td>Rotate left</td>
-      </tr>
-      <tr>
-        <td><span className={styles.keyIcon} title="Right arrow key">→</span></td>
-        <td>Rotate right</td>
-      </tr>
-      <tr>
-        <td><span className={styles.keyIcon} title="Space key">Space</span></td>
-        <td>Reset rotation</td>
-      </tr>
+      <tbody>
+        <tr>
+          <td><span className={styles.keyIcon} title="Left arrow key">←</span></td>
+          <td>Rotate left</td>
+        </tr>
+        <tr>
+          <td><span className={styles.keyIcon} title="Right arrow key">→</span></td>
+          <td>Rotate right</td>
+        </tr>
+        <tr>
+          <td><span className={styles.keyIcon} title="Space key">Space</span></td>
+          <td>Reset rotation</td>
+        </tr>
+      </tbody>
     </table>
   </Wrapper>
 )

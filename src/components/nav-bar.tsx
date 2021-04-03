@@ -18,10 +18,13 @@ export const NavBar: FC = () => {
       { user &&
         <Navbar.Menu>
           <Navbar.Segment align='end'>
-            <Navbar.Item as='span' className='has-text-weight-semibold'>{ user.name }</Navbar.Item>
             <Link passHref href="/help"><Navbar.Item>Help</Navbar.Item></Link>
             <Link passHref href="/about"><Navbar.Item>About</Navbar.Item></Link>
-            <Link passHref href="/logout"><Navbar.Item>Sign Out</Navbar.Item></Link>
+            { user.auth_id
+               ? <Link passHref href="/logout"><Navbar.Item>Sign Out</Navbar.Item></Link>
+               : <Link passHref href={`/login?redirect=${location.pathname}`}><Navbar.Item>Sign In</Navbar.Item></Link>
+            }
+            <Navbar.Item as='span' className='has-text-weight-semibold'>{ user.name }</Navbar.Item>
           </Navbar.Segment>
         </Navbar.Menu>
       }

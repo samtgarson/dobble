@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button, Control, Field, Input, Label, Title } from 'rbx'
 import React, { ChangeEvent, FunctionComponent, KeyboardEvent, useCallback, useEffect, useState } from "react"
 import { GlobalState } from "~/services/state"
@@ -31,6 +32,7 @@ const Auth: FunctionComponent = () => {
       <Field kind="group">
         <Control loading={loading} expanded>
           <Input
+            size='large'
             color={invalid ? 'danger' : undefined}
             type="text"
             placeholder="Princess Consuela..."
@@ -41,9 +43,12 @@ const Auth: FunctionComponent = () => {
           />
         </Control>
         <Control>
-          <Button state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
+          <Button size='large' state={fi(loading, 'loading')} color='success' onClick={createUser} disabled={loading}>Go</Button>
         </Control>
       </Field>
+
+      <Label style={{ marginTop: 30 }}>Already got an account?</Label>
+      <Link passHref href='/login'><Button as='button'>Sign In</Button></Link>
     </Wrapper>
   )
 }

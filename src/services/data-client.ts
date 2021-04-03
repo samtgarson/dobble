@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient, SupabaseRealtimePayload } from "@supabase/supabase-js"
+import { SupabaseAuthClient } from "@supabase/supabase-js/dist/main/lib/SupabaseAuthClient"
 import { addSeconds } from "date-fns"
 import { User } from "~/types/api"
 import { GameEntity, GameEntityWithMeta, GameMembershipEntity, PlayEntity, Players } from "~/types/entities"
@@ -8,7 +9,10 @@ import { Dealer } from "./dealer"
 
 export class DataClient {
   static useClient (): DataClient {
-    const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
+    const client = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+    )
 
     return new DataClient(client)
   }
@@ -28,6 +32,27 @@ export class DataClient {
 
     return hydrate(data)
   }
+
+  async getUserByAuthId (authId: string): Promise<User | null> {
+    const { data } = await this.client
+      .from<User>('users')
+      .select('*')
+      .eq('auth_id', authId)
+      .single()
+
+    return data
+  }
+
+  async setAuthIdForUser (userId: string, authId: string): Promise<void> {
+    const { error } = await this.client
+      .from<User>('users')
+      .update({ auth_id: authId }, { returning: 'minimal' })
+      .eq('id', userId)
+
+    if (error) throw error
+  }
+
+  get auth (): SupabaseAuthClient { return this.client.auth }
 
   async getPlayer (userId: string, gameId: string): Promise<Player | null> {
     const { data, error } = await this.client
