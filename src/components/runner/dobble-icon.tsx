@@ -24,7 +24,9 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
     const inner = cardIndex < 3
 
     // distance from center (inner and outer)
-    const h = inner ? 24 : 44
+    const h = small
+      ? inner ? 24 : 43
+      : inner ? 26 : 48
 
     // pseudo-random looking spread
     const angle = inner
@@ -54,7 +56,7 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
         style={{
           top: `${50 - h}%`,
           height: `${h}%`,
-          transform: r(angle)
+          transform: `${r(angle)}`
         }}
       >
         <TagName className={styles[TagName]} style={{

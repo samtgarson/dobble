@@ -41,7 +41,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <NavBar />
-      <AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
         <AuthWrapper key={Component.name}>
           <Component {...pageProps} />
         </AuthWrapper>

@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind'
 import { motion, Variants } from 'framer-motion'
 import React, { FunctionComponent, useMemo } from 'react'
+import { CSSProperties } from 'react'
 import styles from '~/styles/components/dobble-card.module.scss'
 import { Card } from '~/types/game'
 import { fi } from '~/util'
@@ -12,24 +13,36 @@ type DobbleCardProps = {
   card: Card
   handleChoice?: (index: number) => Promise<boolean>
   faceUp?: boolean
-  size?: string
+  small?: boolean
   backText?: string
   rotate?: number
 }
 
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, size, backText, handleChoice, rotate = 0 }) => {
+const variants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1
+  },
+  exit: {
+    opacity: 0
+  }
+}
+
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, small, backText, handleChoice, rotate = 0 }) => {
   const prefix = useMemo(() => card.join('-'), [card])
 
   return (
     <motion.div
       key={prefix}
-      initial={{ rotateY: '180deg', opacity: 0 }}
-      animate={{ rotateY: '0deg', opacity: 1 }}
-      exit={{ rotateY: '180deg', opacity: 0 }}
-      className={cx('card-wrapper', [size]) }
-      style={{ rotateZ: `${rotate}deg` }}
+      variants={variants}
+      initial='initial'
+      animate='animate'
+      exit='exit'
+      className={cx('card-wrapper', { small }) }
     >
-      <div className={cx('dobble-card', { faceup: faceUp })}>
+      <div className={cx('dobble-card', { faceup: faceUp })} style={{ '--rotate': `${rotate}deg` } as CSSProperties}>
         <div className={ cx('card-front') }>
           <svg xmlns="http://www.w3.org/2000/svg"
             height="10"
@@ -41,7 +54,7 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = 
           </svg>
           { card.map((index, i) => (
             <DobbleIcon
-              small={size === 'small'}
+              small={small}
               key={`${prefix}-${index}`}
               symbolIndex={index}
               cardIndex={i}

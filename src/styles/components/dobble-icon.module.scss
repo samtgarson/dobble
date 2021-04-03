@@ -4,11 +4,12 @@
   display: block;
   transform-origin: bottom center;
   left: 50%;
-  margin-left: -10%;
+  margin-left: -4.5vh;
   line-height: 1em;
   pointer-events: none;
 
   &.small {
+    margin-left: -3vh;
     font-size: 6vh;
   }
 }

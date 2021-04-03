@@ -57,12 +57,11 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
   }, [game.top_card])
 
   const rotationHandler = useCallback((e: KeyboardEvent) => {
-    console.log(e.code, cardRotation)
     switch (e.code) {
       case 'ArrowLeft':
-        return setCardRotation(cardRotation - 10)
+        return setCardRotation(cardRotation - 20)
       case 'ArrowRight':
-        return setCardRotation(cardRotation + 10)
+        return setCardRotation(cardRotation + 20)
       case 'Space':
         return setCardRotation(0)
     }
@@ -77,7 +76,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
 
   return (
     <div className={styles.game}>
-      <DobbleCard card={topCard} size='small' backText='Ready...' faceUp={!newCard} />
+      <DobbleCard card={topCard} small backText='Ready...' faceUp={!newCard} />
       <DobbleCard
         card={hand}
         backText={backText}
