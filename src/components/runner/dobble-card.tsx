@@ -1,13 +1,12 @@
-import classNames from 'classnames/bind'
+import cn from 'classnames/bind'
 import { motion, Variants } from 'framer-motion'
-import React, { FunctionComponent, useMemo } from 'react'
-import { CSSProperties } from 'react'
+import React, { CSSProperties, FunctionComponent, useMemo } from 'react'
 import styles from '~/styles/components/dobble-card.module.scss'
 import { Card } from '~/types/game'
 import { fi } from '~/util'
 import { DobbleIcon } from './dobble-icon'
 
-const cx = classNames.bind(styles)
+const cx = cn.bind(styles)
 
 type DobbleCardProps = {
   card: Card
@@ -18,40 +17,44 @@ type DobbleCardProps = {
   rotate?: number
 }
 
-const variants: Variants = {
+const variants = (faceUp: boolean, small?: boolean): Variants => ({
   initial: {
-    opacity: 0
+    opacity: faceUp ? 0 : 1,
+    rotateY: 45
   },
   animate: {
-    opacity: 1
+    opacity: 1,
+    rotateY: 0,
+    transition: { delay: small ? 0.2 : 0 }
   },
   exit: {
-    opacity: 0
+    opacity: faceUp ? 0 : 1,
+    rotateY: 180
   }
-}
+})
 
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, small, backText, handleChoice, rotate = 0 }) => {
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, small, backText, handleChoice, rotate: rotateZ = 0 }) => {
   const prefix = useMemo(() => card.join('-'), [card])
 
   return (
     <motion.div
       key={prefix}
-      variants={variants}
+      variants={variants(faceUp, small)}
       initial='initial'
-      animate='animate'
+      animate={ faceUp ? 'animate' : 'initial' }
       exit='exit'
       className={cx('card-wrapper', { small }) }
+      transition={{ type: 'tween', ease: 'easeInOut' }}
     >
-      <div className={cx('dobble-card', { faceup: faceUp })} style={{ '--rotate': `${rotate}deg` } as CSSProperties}>
-        <div className={ cx('card-front') }>
-          <svg xmlns="http://www.w3.org/2000/svg"
-            height="10"
-            width="10"
-            viewBox="0 0 10 10"
-            className={styles.svg}
-          >
-            <circle fill="white" cx="5" cy="5" r="5" />
-          </svg>
+      <div style={{ '--rotateZ': `${rotateZ}deg` } as CSSProperties} className={ cx('card-front') }>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          height="10"
+          width="10"
+          viewBox="0 0 10 10"
+          className={styles.svg}
+        >
+          <circle fill="white" cx="5" cy="5" r="5" />
+        </svg>
           { card.map((index, i) => (
             <DobbleIcon
               small={small}
@@ -73,7 +76,6 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = 
             <circle fill="var(--pink)" cx="5" cy="5" r="5" />
           </svg>
         </div>
-      </div>
     </motion.div>
   )
 }

@@ -13,7 +13,7 @@ type QuickGameFormProps = {
 
 export const QuickGameForm: FC<QuickGameFormProps> = ({ code, goToGame, loading, setCode, createGame, err }) => (
   <>
-    <form action={`/game/${code}`} style={{ marginBottom: 20 }} onSubmit={e => { e.preventDefault(); goToGame() }}>
+    <form action={`/game/${code}`} className="mb-5" onSubmit={e => { e.preventDefault(); goToGame() }}>
       <Label>Already got a game code?</Label>
       <Field kind="group">
         <Control expanded>

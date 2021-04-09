@@ -24,7 +24,7 @@ const LogIn: NextPage<{ redirect: string}> = ({ redirect }) => {
   return (
     <Wrapper>
       <DobbleTitle text='Sign In' />
-      <p style={{ marginBottom: 20 }}>Use your Google account to sign into Dobble</p>
+      <p className="mb-5">Use your Google account to sign into Dobble</p>
       <Button size="large" onClick={login}><img src={googleIcon} style={{ height: '1em', marginRight: 10 }} /> Continue with Google</Button>
     </Wrapper>
   )

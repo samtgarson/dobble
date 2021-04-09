@@ -62,7 +62,7 @@ export const FinishedGame: FunctionComponent<FinishedGameProps> = ({ game, user,
         { duration && <span style={{ fontWeight: 'normal' }}>(in {duration})</span> }
       </Title>
       <Scoreboard players={players} />
-      <div style={{ marginTop: 40 }}>
+      <div className="mb-5">
         { nextGame
           ? <>
               <Link passHref href={`/game/${nextGame.id}`}>

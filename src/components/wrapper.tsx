@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Section } from "rbx"
 import React, { FunctionComponent } from "react"
 import cn from 'classnames'
@@ -12,20 +12,23 @@ const variants = {
 
 const transition = {
   type: 'spring',
-  duration: 0.2
+  duration: 0.4
 }
 
 export const Wrapper: FunctionComponent<{ className?: string }> = ({ children, className }) => (
-  <Section className={cn(styles.section, className)}>
-    <motion.div
-      className={cn('container', styles.container)}
-      variants={variants}
-      transition={transition}
-      initial='hidden'
-      animate='visible'
-      exit='exit'
-    >
-      { children }
-    </motion.div>
-  </Section>
+  <AnimatePresence>
+    <Section className={cn(styles.section, className)}>
+      <motion.div
+        layout
+        className={cn('container', styles.container)}
+        variants={variants}
+        transition={transition}
+        initial='hidden'
+        animate='visible'
+        exit='exit'
+      >
+        { children }
+      </motion.div>
+    </Section>
+  </AnimatePresence>
 )

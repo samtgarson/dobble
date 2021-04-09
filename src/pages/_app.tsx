@@ -1,4 +1,3 @@
-import { AnimatePresence } from 'framer-motion'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
@@ -22,11 +21,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <NavBar />
-      <AnimatePresence exitBeforeEnter>
-        <AuthWrapper key={Component.name}>
-          <Component {...pageProps} />
-        </AuthWrapper>
-      </AnimatePresence>
+      <AuthWrapper key={Component.name}>
+        <Component {...pageProps} />
+      </AuthWrapper>
     </GlobalState.Provider>
   )
 }

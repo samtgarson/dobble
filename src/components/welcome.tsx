@@ -48,7 +48,7 @@ const Auth: FunctionComponent = () => {
       </Field>
 
       <Label style={{ marginTop: 30 }}>Already got an account?</Label>
-      <Link passHref href='/login'><Button as='button'>Sign In</Button></Link>
+      <Link passHref href={`/login?redirect=${location.pathname}`}><Button as='a'>Sign In</Button></Link>
     </Wrapper>
   )
 }

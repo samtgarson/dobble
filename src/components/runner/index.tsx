@@ -1,11 +1,12 @@
+import { AnimatePresence } from "framer-motion"
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react"
 import { DataClient } from "~/services/data-client"
+import styles from '~/styles/components/dobble-card.module.scss'
 import { GameEntityWithMeta } from "~/types/entities"
 import { Player } from "~/types/game"
 import { getTimeLeft } from "~/util"
 import { Wrapper } from "../wrapper"
 import { DobbleCard } from "./dobble-card"
-import styles from '~/styles/components/dobble-card.module.scss'
 
 type RunnerProps = {
   game: GameEntityWithMeta
@@ -18,7 +19,6 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
   const [timeLeft, setTimeLeft] = useState(game.started_at && getTimeLeft(game.started_at))
   const client = DataClient.useClient()
   const [topCard, setTopCard] = useState(game.top_card)
-  const [newCard, setNewCard] = useState(false)
   const [cardRotation, setCardRotation] = useState(0)
 
   useEffect(() => {
@@ -31,7 +31,6 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
   }, [timeLeft])
 
   const handleChoice = useCallback(async (icon: number) => {
-    if (newCard) return false
     const match = game.top_card.includes(icon)
     if (!client || !match) return false
 
@@ -42,19 +41,15 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
       reload()
       return false
     }
-  }, [game, hand, newCard])
+  }, [game, hand])
 
   useEffect(() => {
-    let mounted = true
     setTopCard(game.top_card)
-    setNewCard(true)
-
-    setTimeout(() =>{
-      if (mounted) setNewCard(false)
-    }, 700)
-
-    return () => { mounted = false }
   }, [game.top_card])
+
+  useEffect(() => {
+    setCardRotation(0)
+  }, [hand])
 
   const rotationHandler = useCallback((e: KeyboardEvent) => {
     switch (e.code) {
@@ -76,14 +71,19 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
 
   return (
     <div className={styles.game}>
-      <DobbleCard card={topCard} small backText='Ready...' faceUp={!newCard} />
-      <DobbleCard
-        card={hand}
-        backText={backText}
-        faceUp={!backText}
-        handleChoice={handleChoice}
-        rotate={cardRotation}
-      />
+      <AnimatePresence exitBeforeEnter>
+        <DobbleCard key={topCard.join('-')} card={topCard} small faceUp />
+      </AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
+        <DobbleCard
+          key={hand.join('-')}
+          card={hand}
+          backText={backText}
+          faceUp={!backText}
+          handleChoice={handleChoice}
+          rotate={cardRotation}
+        />
+      </AnimatePresence>
       { children }
     </div>
   )

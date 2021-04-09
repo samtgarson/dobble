@@ -1,18 +1,16 @@
+import { Title } from 'rbx'
+import { TitleVariables } from 'rbx/elements/title/title'
 import * as React from 'react'
-import { Title, Level } from 'rbx'
 import styles from '~/styles/components/title.module.scss'
 
 type DobbleTitleProps = {
   text: string
+  size?: TitleVariables['sizes']
 }
 
-export const DobbleTitle: React.FC<DobbleTitleProps> = ({ text, children }) => (
+export const DobbleTitle: React.FC<DobbleTitleProps> = ({ text, children, size = 3 }) => (
   <>
-    <Level breakpoint="mobile">
-      <Level.Item align='left'><Title className={styles.title} size={3}>{ text }</Title></Level.Item>
-      <Level.Item align='right'>
-        { children }
-      </Level.Item>
-    </Level>
+    <Title className={styles.title} size={size}>{ text }</Title>
+    <div className={styles.corner}>{ children }</div>
   </>
 )

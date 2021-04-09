@@ -62,3 +62,10 @@ li {
   list-style-type: none;
 }
 
+.unclickable {
+  pointer-events: none;
+}
+
+.heading {
+  font-size: 0.8rem;
+}

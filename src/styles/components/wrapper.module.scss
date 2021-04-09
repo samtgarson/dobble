@@ -1,8 +1,7 @@
-.section {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 20;
+@import '~bulma/sass/utilities/mixins';
+
+.section + .section {
+  padding-top: 0;
 }
 
 .container {
@@ -10,10 +9,9 @@
   max-width: 550px !important;
   border-radius: 10px;
   background: white;
-  box-shadow:  20px 20px 60px #5200b8,
-    -20px -20px 60px #7000fa;
+  box-shadow:  10px 10px 30px #5200b8;
 
-  @media (max-width: 400px) {
+  @include mobile {
     padding: 10px;
   }
 }
