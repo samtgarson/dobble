@@ -2,7 +2,7 @@ import { createClient, SupabaseClient, SupabaseRealtimePayload } from "@supabase
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/main/lib/SupabaseAuthClient"
 import { addSeconds } from "date-fns"
 import { User } from "~/types/api"
-import { GameEntity, GameEntityWithMeta, GameMembershipEntity, PlayEntity, Players } from "~/types/entities"
+import { GameEntity, GameEntityWithMeta, GameMembershipEntity, LeagueEntity, LeagueEntityWithMeta, LeagueMembershipEntity, PlayEntity, Players } from "~/types/entities"
 import { Card, Deck, GameStatus, Player } from "~/types/game"
 import { hydrate } from "../util/hydrate"
 import { Dealer } from "./dealer"
@@ -31,6 +31,12 @@ export class DataClient {
     if (!data) throw new Error('Could not create user')
 
     return hydrate(data)
+  }
+
+  async getUserFromCookie (req: unknown): Promise<User | null> {
+    const { user } = await this.client.auth.api.getUserByCookie(req)
+    if (!user) return null
+    return await this.getUserByAuthId(user.id)
   }
 
   async getUserByAuthId (authId: string): Promise<User | null> {
@@ -130,10 +136,10 @@ export class DataClient {
     if (error) throw error
   }
 
-  async createGame (userId: string): Promise<GameEntity> {
+  async createGame (userId: string, leagueId?: string): Promise<GameEntity> {
     const { data, error } = await this.client
       .from<GameEntity>('games')
-      .insert({ owner_id: userId })
+      .insert({ owner_id: userId, league_id: leagueId })
       .single()
 
     if (error) throw error
@@ -154,6 +160,8 @@ export class DataClient {
 
     if (error) throw error
     if (!data) return
+
+    if (data.league_id) data.league = await this.getLeague(data.league_id)
 
     return hydrate(data)
   }
@@ -188,6 +196,43 @@ export class DataClient {
     if (error) throw error
 
     return next_game_id
+  }
+
+  async createLeague (userId: string, name: string): Promise<LeagueEntity> {
+    const { data } = await this.client
+      .from<LeagueEntity>('leagues')
+      .insert({ name })
+      .single()
+
+    if (!data) throw new Error('Could not create league')
+
+    const { error } = await this.client
+      .from<LeagueMembershipEntity>('league_memberships')
+      .insert(
+        { user_id: userId, league_id: data.id, role: 'ADMIN' },
+        { returning: 'minimal' }
+      )
+
+    if (error) throw error
+    return data
+  }
+
+  async getLeague (leagueId: string): Promise<LeagueEntityWithMeta | null> {
+    const { data } = await this.client
+      .from<LeagueEntityWithMeta>('leagues_with_meta')
+      .select('*,members:league_players(*)')
+      .eq('id', leagueId)
+      .single()
+
+    return data
+  }
+
+  async getLeagues (userId: string): Promise<LeagueEntityWithMeta[]> {
+    const { data } = await this.client
+      .rpc<LeagueEntityWithMeta>('get_leagues', { req_user_id: userId })
+      .select('*,members:league_players(*)')
+
+    return data ?? []
   }
 
   subscribeToGame (originalGame: GameEntityWithMeta, update: (game: GameEntityWithMeta) => void): () => void {

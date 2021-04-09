@@ -4,3 +4,8 @@ export type User = {
   created_at: Date
   auth_id?: string
 }
+
+export type PaginationOpts = {
+  page?: number
+  perPage?: number
+}

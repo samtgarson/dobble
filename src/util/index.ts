@@ -13,3 +13,6 @@ export const getTimeLeft = (fromDate?: Date, toDate?: Date): number => {
   return differenceInSeconds(fromDate, toDate ?? new Date())
 }
 
+export const medals = ['🥇', '🥈', '🥉']
+
+export const pluralize = (n: number, s1: string, smany: string): string => n == 1 ? `${n} ${s1}` : `${n} ${smany}`

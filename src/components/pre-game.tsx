@@ -46,6 +46,9 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
 
   return (
     <Wrapper>
+      { game.league &&
+        <Heading><strong>{ game.league.name }:</strong> Game { game.league?.game_count + 1 }</Heading>
+      }
       <DobbleTitle text="New game">
         <Button size='small' color="light" onClick={copyCode}>{ copied
           ? '✅ Copied'
@@ -63,7 +66,10 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         {Object.values(players).map(player =>
           <Tag key={player.id}>{player.name}</Tag>
         )}
-        <Button size="small" state="loading" color="light" className="tag"></Button>
+        <Tag color='white' key="loading" className='has-text-grey-dark'>
+          <span className="loader mr-3" />
+          Waiting for other players
+        </Tag>
       </Tag.Group>
     </Wrapper>
   )

@@ -11,11 +11,13 @@ export interface GameEntity {
   finished_at?: Date
   winner_id?: string
   next_game_id?: string
+  league_id?: string
 }
 
 export interface GameEntityWithMeta extends GameEntity {
   top_card: Card
   position: number
+  league?: LeagueEntityWithMeta | null
 }
 
 export interface PlayEntity {
@@ -34,3 +36,28 @@ export interface GameMembershipEntity {
 }
 
 export type Players = Record<string, Player>
+
+export interface LeagueEntity {
+  id: string
+  members: User[]
+  name: string
+}
+
+export interface LeagueEntityWithMeta extends LeagueEntity {
+  game_count: number
+  members: {
+    league_id: string
+    cards_left: number
+    membership: LeagueMembershipEntity
+    user: User
+  }[]
+}
+
+export type LeagueRole = 'PLAYER' | 'ADMIN'
+
+export interface LeagueMembershipEntity {
+  id: string
+  user_id: string
+  league_id: string
+  role: LeagueRole
+}
