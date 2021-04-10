@@ -15,9 +15,9 @@ const transition = {
   duration: 0.4
 }
 
-export const Wrapper: FunctionComponent<{ className?: string }> = ({ children, className }) => (
+export const Wrapper: FunctionComponent<{ className?: string, featured?: boolean }> = ({ children, className, featured }) => (
   <AnimatePresence>
-    <Section className={cn(styles.section, className)}>
+    <Section className={cn(styles.section, className, { [styles.featured]: featured })}>
       <motion.div
         layout
         className={cn('container', styles.container)}

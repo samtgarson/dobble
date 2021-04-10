@@ -4,6 +4,19 @@
   padding-top: 0;
 }
 
+section.featured {
+  padding-bottom: 10px;
+
+  .container {
+    background: var(--pink);
+  }
+
+  &, * {
+    color: white;
+  }
+}
+
+
 .container {
   padding: 20px;
   max-width: 550px !important;

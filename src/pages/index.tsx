@@ -1,7 +1,7 @@
 import { NextPage } from "next"
 import Link from 'next/link'
 import { useRouter } from "next/router"
-import { Button } from 'rbx'
+import { Block, Button } from 'rbx'
 import React, { useCallback, useState } from "react"
 import { DobbleTitle } from '~/components/title'
 import { Wrapper } from "~/components/wrapper"
@@ -39,6 +39,10 @@ const Index: NextPage = () => {
 
   return (
     <>
+      <Wrapper featured><Link href='/leagues'><a>
+        <strong>New!</strong> Leagues let you keep track of scores with friends.&nbsp;
+        <span className='underlined'>Take a look</span>
+      </a></Link></Wrapper>
       <Wrapper>
         <DobbleTitle text="Dobble">
           <Link href='/about'><Button color='light' as='a'>💜 About</Button></Link>

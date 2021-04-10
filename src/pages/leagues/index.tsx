@@ -7,7 +7,6 @@ import { DobbleTitle } from "~/src/components/title"
 import { Wrapper } from "~/src/components/wrapper"
 import { DataClient } from "~/src/services/data-client"
 import { GlobalState } from "~/src/services/state"
-import { loginUrl } from "~/src/util"
 import { LeagueEntityWithMeta } from "~/types/entities"
 
 type LeaguesProps = {
@@ -39,14 +38,8 @@ const Leagues: NextPage<LeaguesProps> = ({ leagues }) => {
 export const getServerSideProps: GetServerSideProps<LeaguesProps> = async ({ req }) => {
   const client = DataClient.useClient()
   const user = await client.getUserFromCookie(req)
-  if (!user) return {
-    redirect: {
-      permanent: false,
-      destination: loginUrl(req.url)
-    }
-  }
 
-  const leagues = await client.getLeagues(user.id)
+  const leagues = user ? await client.getLeagues(user.id) : undefined
   return { props: { leagues } }
 }
 

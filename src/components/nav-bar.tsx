@@ -22,7 +22,7 @@ const ActiveLink: FC<{ href: string }> = ({ href, children }) => {
 const UserNav = ({ user }: { user: User }) => (
     <Navbar.Menu>
     <Navbar.Segment align='end'>
-      { user.auth_id && <ActiveLink href="/leagues">Leagues</ActiveLink> }
+      <ActiveLink href="/leagues">Leagues</ActiveLink>
       <ActiveLink href="/help">Help</ActiveLink>
       <ActiveLink href="/about">About</ActiveLink>
       { user.auth_id
