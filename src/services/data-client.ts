@@ -3,7 +3,7 @@ import { SupabaseAuthClient } from "@supabase/supabase-js/dist/main/lib/Supabase
 import { addSeconds } from "date-fns"
 import { User } from "~/types/api"
 import { GameEntity, GameEntityWithMeta, GameMembershipEntity, LeagueEntity, LeagueEntityWithMeta, LeagueMembershipEntity, PlayEntity, Players } from "~/types/entities"
-import { Card, Deck, GameStatus, Player } from "~/types/game"
+import { Card, Deck, Player } from "~/types/game"
 import { hydrate } from "../util/hydrate"
 import { Dealer } from "./dealer"
 
@@ -112,14 +112,14 @@ export class DataClient {
     const startedAt = addSeconds(new Date(), 5)
     const { error } = await this.client
       .from<GameEntity>('games')
-      .update({ started_at: startedAt, state: GameStatus.Playing }, { returning: 'minimal' })
+      .update({ started_at: startedAt, state: 'PLAYING' }, { returning: 'minimal' })
       .eq('id', game.id)
 
     if (error) throw error
   }
 
   async finishGame (gameId: string, userId: string): Promise<void> {
-    const newAttrs = { winner_id: userId, state: GameStatus.Finished, finished_at: new Date() }
+    const newAttrs: Partial<GameEntity> = { winner_id: userId, state: 'FINISHED', finished_at: new Date() }
     const { error } = await this.client
       .from<GameEntity>('games')
       .update(newAttrs, { returning: 'minimal' })
@@ -214,17 +214,18 @@ export class DataClient {
       )
 
     if (error) throw error
-    return data
+    return hydrate(data)
   }
 
   async getLeague (leagueId: string): Promise<LeagueEntityWithMeta | null> {
     const { data } = await this.client
       .from<LeagueEntityWithMeta>('leagues_with_meta')
       .select('*,members:league_players(*)')
+      .order('win_count' as keyof LeagueEntityWithMeta, { foreignTable: 'members', ascending: false })
       .eq('id', leagueId)
       .single()
 
-    return data
+    return hydrate(data)
   }
 
   async getLeagues (userId: string): Promise<LeagueEntityWithMeta[]> {
@@ -232,7 +233,28 @@ export class DataClient {
       .rpc<LeagueEntityWithMeta>('get_leagues', { req_user_id: userId })
       .select('*,members:league_players(*)')
 
-    return data ?? []
+    return hydrate(data) ?? []
+  }
+
+  async joinLeague (userId: string, leagueId: string): Promise<void> {
+    const { error } = await this.client
+      .from<LeagueMembershipEntity>('league_memberships')
+      .insert(
+        { user_id: userId, league_id: leagueId },
+        { returning: 'minimal' }
+      )
+
+    if (error) throw error
+  }
+
+  async getOpenLeagueGames (leagueId: string): Promise<GameEntity[]> {
+    const { data } = await this.client
+      .from<GameEntity>('games')
+      .select('*')
+      .eq('league_id', leagueId)
+      .eq('state', 'OPEN')
+
+    return hydrate(data) || []
   }
 
   subscribeToGame (originalGame: GameEntityWithMeta, update: (game: GameEntityWithMeta) => void): () => void {
@@ -282,5 +304,4 @@ export class DataClient {
       this.client.removeSubscription(sub)
     }
   }
-
 }

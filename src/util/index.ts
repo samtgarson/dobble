@@ -16,3 +16,5 @@ export const getTimeLeft = (fromDate?: Date, toDate?: Date): number => {
 export const medals = ['🥇', '🥈', '🥉']
 
 export const pluralize = (n: number, s1: string, smany: string): string => n == 1 ? `${n} ${s1}` : `${n} ${smany}`
+
+export const loginUrl = (path?: string): string => `/login?redirect=${encodeURIComponent(path ?? '/')}`

@@ -1,7 +1,7 @@
 import { AuthChangeEvent, Session } from "@supabase/supabase-js"
-import { useRouter } from "next/router"
 import React, { FunctionComponent, useCallback, useEffect } from "react"
 import { GlobalState } from "~/services/state"
+import { User } from "~/types/api"
 import { DataClient } from "../services/data-client"
 import Welcome from "./welcome"
 
@@ -17,7 +17,6 @@ const setSession = (event: AuthChangeEvent, session: Session | null): Promise<Re
 export const AuthWrapper: FunctionComponent = ({ children }) => {
   const { user, loaded, dispatch } = GlobalState.useContainer()
   const client = DataClient.useClient()
-  const router = useRouter()
 
   const setUser = useCallback(async (id: string) => {
     if (user?.auth_id) return
@@ -28,14 +27,20 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
     } else {
       const u = await client.getUserByAuthId(id)
       if (u) dispatch({ user: u })
-      else router.push('/logout')
+      else dispatch({ user: { auth_id: id } as User })
     }
   }, [user])
 
   useEffect(() => {
     const existingSesssion = client.auth.session()
-    if (existingSesssion) setSession('SIGNED_IN', existingSesssion)
-    else if (user?.auth_id) dispatch({ user: { ...user, auth_id: undefined } })
+
+    if (existingSesssion) {
+      setSession('SIGNED_IN', existingSesssion)
+      if (user && !user.auth_id) dispatch({ user: { ...user, auth_id: existingSesssion.user.id } })
+    } else {
+      setSession('SIGNED_OUT', null)
+      if (user?.auth_id) dispatch({ user: { ...user, auth_id: undefined } })
+    }
 
     const { data, error } = client.auth.onAuthStateChange((event, session) => {
       setSession(event, session)
@@ -48,8 +53,8 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
     return data?.unsubscribe
   }, [user])
 
-  if (!loaded) return <></>
+  if (!loaded) return null
 
-  return user || whitelisted.includes(location.pathname) ? <>{ children }</> : <Welcome />
+  return user?.id || whitelisted.includes(location.pathname) ? <>{ children }</> : <Welcome />
 }
 

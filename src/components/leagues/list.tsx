@@ -19,13 +19,13 @@ type LeagueItemProps = {
 
 const LeagueItem: FC<LeagueItemProps> = ({ league }) => (
   <li>
-    <Link href={`/leagues/${league.id}`}><a>
+    <Link href={`/leagues/${league.id}`}><a className='has-text-black'>
       <p className="is-flex is-justify-content-space-between is-align-items-center mb-3">
-        <strong className="mr-3">{ league.name }</strong>
         <span>
-          { pluralize(league.members.length, 'player', 'players') }
+          <strong className="mr-3">{ league.name }</strong>
+          ({ pluralize(league.members.length, 'player', 'players') })
         </span>
-        {/* <span>👉</span> */}
+        <Button as='span' size='small'>&gt;</Button>
       </p>
     </a></Link>
   </li>
@@ -61,7 +61,7 @@ export const LeaguesList: FC<LeaguesListProps> = ({ leagues = [], showNew }) => 
                 />
               </Control>
               <Control>
-                <Button state={fi(loading, 'loading')} color='primary'>Create a league</Button>
+                <Button state={fi(loading, 'loading')} color='primary'>Create league</Button>
               </Control>
             </Field>
           </form>

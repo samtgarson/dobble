@@ -1,5 +1,7 @@
 import { User } from './api'
-import { Card, Deck, GameStatus, Player } from './game'
+import { Card, Deck, Player } from './game'
+
+export type GameStatus = 'OPEN' | 'PLAYING' | 'FINISHED' | 'CLOSED'
 
 export interface GameEntity {
   id: string
@@ -45,12 +47,7 @@ export interface LeagueEntity {
 
 export interface LeagueEntityWithMeta extends LeagueEntity {
   game_count: number
-  members: {
-    league_id: string
-    cards_left: number
-    membership: LeagueMembershipEntity
-    user: User
-  }[]
+  members: LeaguePlayer[]
 }
 
 export type LeagueRole = 'PLAYER' | 'ADMIN'
@@ -61,3 +58,14 @@ export interface LeagueMembershipEntity {
   league_id: string
   role: LeagueRole
 }
+
+export type LeaguePlayer = {
+  id: string
+  league_id: string
+  cards_left: number
+  win_count: number
+  membership: LeagueMembershipEntity
+  user: User
+}
+
+

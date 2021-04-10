@@ -5,6 +5,7 @@ import { User } from "~/types/api"
 import { GameEntityWithMeta, Players } from "~/types/entities"
 import { fi } from '~/util'
 import { DataClient } from '../services/data-client'
+import { CopyButton } from './copy-button'
 import { DobbleTitle } from "./title"
 import { Wrapper } from "./wrapper"
 
@@ -16,7 +17,6 @@ type PreGameProps = {
 
 const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   const [loading, setLoading] = useState(false)
-  const [copied, setCopied] = useState(false)
   const client = DataClient.useClient()
 
   const startGame = useCallback(() => {
@@ -26,22 +26,6 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
     client.startGame(game, players)
   }, [client, players])
 
-  const copyCode = useCallback(() => {
-    let mounted = true
-    const url = location.href
-
-    if (navigator['share'] !== undefined) {
-      navigator.share({ title: 'Dobble', url }).catch(() => {})
-    } else {
-      navigator.clipboard.writeText(url)
-      setCopied(true)
-
-      setTimeout(() => mounted && setCopied(false), 1000)
-    }
-
-    return () => mounted = false
-  }, [game])
-
   const owner = useMemo(() => players[game.owner_id]?.name, [players, game])
 
   return (
@@ -50,10 +34,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
         <Heading><strong>{ game.league.name }:</strong> Game { game.league?.game_count + 1 }</Heading>
       }
       <DobbleTitle text="New game">
-        <Button size='small' color="light" onClick={copyCode}>{ copied
-          ? '✅ Copied'
-          : `📝 ${'share' in navigator ? 'Share game link' : 'Copy game link'}`
-        }</Button>
+        <CopyButton label='game link' />
       </DobbleTitle>
       <Block>
         { game.owner_id === user.id

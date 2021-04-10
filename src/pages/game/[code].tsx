@@ -10,7 +10,7 @@ import { Scoreboard } from '~/src/components/runner/scoreboard'
 import { DataClient } from '~/services/data-client'
 import { User } from '~/types/api'
 import { GameEntityWithMeta, Players } from '~/types/entities'
-import { GameStatus, Player } from '~/types/game'
+import { Player } from '~/types/game'
 import FourOhFour from '../404'
 
 type RenderGameProps = {
@@ -22,15 +22,15 @@ type RenderGameProps = {
 
 const RenderGame: FunctionComponent<RenderGameProps> = ({ game, players, user, reload }) => {
   switch (game.state) {
-    case GameStatus.Open:
+    case 'OPEN':
       return <PreGame user={user} game={game} players={players} />
-    case GameStatus.Playing:
+    case 'PLAYING':
       return (
         <Runner game={game} player={players[user.id]} reload={reload}>
           <Scoreboard players={players} banner={true} />
         </Runner>
       )
-    case GameStatus.Finished:
+    case 'FINISHED':
       return <FinishedGame game={game} user={user} players={players} />
     default:
       return (
@@ -61,7 +61,7 @@ const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props
 
   useEffect(() => {
     if (!user || member) return
-    if (game.state !== GameStatus.Open) return setErr(true)
+    if (game.state !== 'OPEN') return setErr(true)
 
     const joinGame = async () => {
       await client.joinGame(user.id, game.id)
