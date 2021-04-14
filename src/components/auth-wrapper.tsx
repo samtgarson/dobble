@@ -2,12 +2,12 @@ import { AuthChangeEvent, Session } from "@supabase/supabase-js"
 import React, { FunctionComponent, useCallback, useEffect } from "react"
 import { GlobalState } from "~/services/state"
 import { User } from "~/types/api"
-import { DataClient } from "../services/data-client"
+import { DataClient } from "~/services/data-client"
 import Welcome from "./welcome"
 
 const whitelisted = ['/login', '/logout', '/auth']
 
-const setSession = (event: AuthChangeEvent, session: Session | null): Promise<Response> => fetch('/api/auth', {
+const setSession = (event: AuthChangeEvent, session: Session | null) => fetch('/api/auth', {
   method: 'POST',
   headers: new Headers({ 'Content-Type': 'application/json' }),
   credentials: 'same-origin',
@@ -21,14 +21,13 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
   const setUser = useCallback(async (id: string) => {
     if (user?.auth_id) return
 
-    if (user) {
+    const foundUser = await client.getUserByAuthId(id)
+    debugger
+    if (foundUser) dispatch({ user: foundUser })
+    else if (user) {
       await client.setAuthIdForUser(user.id, id)
       dispatch({ user: { ...user, auth_id: id } })
-    } else {
-      const u = await client.getUserByAuthId(id)
-      if (u) dispatch({ user: u })
-      else dispatch({ user: { auth_id: id } as User })
-    }
+    } else dispatch({ user: { auth_id: id } as User })
   }, [user])
 
   useEffect(() => {
