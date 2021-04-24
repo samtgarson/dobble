@@ -4,10 +4,10 @@ import React, { FunctionComponent, useCallback, useMemo, useState } from "react"
 import { User } from "~/types/api"
 import { GameEntityWithMeta, Players } from "~/types/entities"
 import { fi } from '~/util'
-import { DataClient } from '../services/data-client'
-import { CopyButton } from './copy-button'
-import { DobbleTitle } from "./title"
-import { Wrapper } from "./wrapper"
+import { DataClient } from '~/services/data-client'
+import { CopyButton } from '~/components/atoms/copy-button'
+import { DobbleTitle } from "~/components/atoms/title"
+import { Wrapper } from "~/components/atoms/wrapper"
 
 type PreGameProps = {
   game: GameEntityWithMeta
@@ -31,7 +31,7 @@ const PreGame: FunctionComponent<PreGameProps> = ({ game, user, players }) => {
   return (
     <Wrapper>
       { game.league &&
-        <Heading><strong>{ game.league.name }:</strong> Game { game.league?.game_count + 1 }</Heading>
+        <Heading><strong>{ game.league.name }:</strong> Game { game.league.game_count + 1 }</Heading>
       }
       <DobbleTitle text="New game">
         <CopyButton label='game link' />

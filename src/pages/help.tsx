@@ -2,8 +2,8 @@ import { NextPage } from "next"
 import { Button, Title } from 'rbx'
 import React from 'react'
 import styles from '~/styles/pages/page.module.scss'
-import { DobbleTitle } from '../components/title'
-import { Wrapper } from "../components/wrapper"
+import { DobbleTitle } from '../components/atoms/title'
+import { Wrapper } from "../components/atoms/wrapper"
 
 const HelpPage: NextPage = () => (
   <Wrapper className={styles.page}>

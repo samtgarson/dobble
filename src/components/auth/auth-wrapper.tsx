@@ -22,7 +22,6 @@ export const AuthWrapper: FunctionComponent = ({ children }) => {
     if (user?.auth_id) return
 
     const foundUser = await client.getUserByAuthId(id)
-    debugger
     if (foundUser) dispatch({ user: foundUser })
     else if (user) {
       await client.setAuthIdForUser(user.id, id)

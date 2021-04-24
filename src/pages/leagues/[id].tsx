@@ -2,11 +2,11 @@ import { GetServerSideProps, NextPage } from "next"
 import { useRouter } from "next/router"
 import { Button, Heading } from "rbx"
 import React, { useCallback, useState } from 'react'
-import { CopyButton } from "~/src/components/copy-button"
-import { LeagueItem } from "~/src/components/leagues/item"
+import { CopyButton } from "~/src/components/atoms/copy-button"
+import { LeaguePlayer } from "~/src/components/leagues/player"
 import { OpenGameButton } from "~/src/components/leagues/open-game-button"
-import { DobbleTitle } from '~/src/components/title'
-import { Wrapper } from "~/src/components/wrapper"
+import { DobbleTitle } from '~/src/components/atoms/title'
+import { Wrapper } from "~/src/components/atoms/wrapper"
 import { DataClient } from "~/src/services/data-client"
 import { GlobalState } from "~/src/services/state"
 import { fi, loginUrl, pluralize } from "~/src/util"

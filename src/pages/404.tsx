@@ -1,6 +1,6 @@
 import { NextPage } from "next"
-import { Wrapper } from "~/components/wrapper"
-import { DobbleTitle } from '~/components/title'
+import { Wrapper } from "~/components/atoms/wrapper"
+import { DobbleTitle } from '~/components/atoms/title'
 import React from "react"
 import Link from "next/link"
 import { Button } from "rbx"

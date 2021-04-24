@@ -60,7 +60,7 @@
 
 .card-back {
   color: white;
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateX(50%);
   font-size: 1.2em;
   text-transform: uppercase;
   letter-spacing: 2px;

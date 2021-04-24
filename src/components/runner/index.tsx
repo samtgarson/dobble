@@ -5,7 +5,7 @@ import styles from '~/styles/components/dobble-card.module.scss'
 import { GameEntityWithMeta } from "~/types/entities"
 import { Player } from "~/types/game"
 import { getTimeLeft } from "~/util"
-import { Wrapper } from "../wrapper"
+import { Wrapper } from "~/components/atoms/wrapper"
 import { DobbleCard } from "./dobble-card"
 
 type RunnerProps = {

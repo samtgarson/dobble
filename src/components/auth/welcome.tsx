@@ -3,8 +3,8 @@ import { Button, Control, Field, Input, Label, Title } from 'rbx'
 import React, { ChangeEvent, FunctionComponent, KeyboardEvent, useCallback, useEffect, useState } from "react"
 import { GlobalState } from "~/services/state"
 import { fi, loginUrl } from "~/util"
-import { DataClient } from "../services/data-client"
-import { Wrapper } from "./wrapper"
+import { DataClient } from "~/services/data-client"
+import { Wrapper } from "~/components/atoms/wrapper"
 
 const Auth: FunctionComponent = () => {
   const { dispatch, user } = GlobalState.useContainer()

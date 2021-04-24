@@ -1,11 +1,11 @@
 import { NextPage } from "next"
 import Link from 'next/link'
 import { useRouter } from "next/router"
-import { Block, Button } from 'rbx'
+import { Button } from 'rbx'
 import React, { useCallback, useState } from "react"
-import { DobbleTitle } from '~/components/title'
-import { Wrapper } from "~/components/wrapper"
-import { QuickGameForm } from "../components/quick-game-form"
+import { DobbleTitle } from '~/components/atoms/title'
+import { Wrapper } from "~/components/atoms/wrapper"
+import { QuickGameForm } from "../components/game/quick-game-form"
 import { DataClient } from "../services/data-client"
 import { GlobalState } from "../services/state"
 

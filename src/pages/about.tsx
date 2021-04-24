@@ -1,8 +1,8 @@
 import { NextPage } from 'next'
 import { Button, Title } from 'rbx'
 import * as React from 'react'
-import { DobbleTitle } from '~/components/title'
-import { Wrapper } from '~/components/wrapper'
+import { DobbleTitle } from '~/components/atoms/title'
+import { Wrapper } from '~/components/atoms/wrapper'
 import styles from '~/styles/pages/page.module.scss'
 
 const About: NextPage = () => (
