@@ -20,7 +20,7 @@ type DobbleCardProps = {
 const variants = (faceUp: boolean, small?: boolean): Variants => ({
   initial: {
     opacity: faceUp ? 0 : 1,
-    rotateY: 45
+    rotateY: faceUp ? 45 : 180
   },
   animate: {
     opacity: 1,
@@ -44,7 +44,7 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = 
       animate={ faceUp ? 'animate' : 'initial' }
       exit='exit'
       className={cx('card-wrapper', { small }) }
-      transition={{ type: 'tween', ease: 'easeInOut' }}
+      transition={{ type: 'tween', ease: 'easeInOut', duration: 0.1 }}
     >
       <div style={{ '--rotateZ': `${rotateZ}deg` } as CSSProperties} className={ cx('card-front') }>
         <svg xmlns="http://www.w3.org/2000/svg"

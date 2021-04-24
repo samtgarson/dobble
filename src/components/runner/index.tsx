@@ -32,7 +32,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
 
   const handleChoice = useCallback(async (icon: number) => {
     const match = game.top_card.includes(icon)
-    if (!client || !match) return false
+    if (!client || !match || backText) return false
 
     try {
       await client.playCard(game.id, player, game.position + 1)
@@ -41,7 +41,7 @@ const Runner: FunctionComponent<RunnerProps> = ({ game, player, reload, children
       reload()
       return false
     }
-  }, [game, hand])
+  }, [game, hand, backText])
 
   useEffect(() => {
     setTopCard(game.top_card)
