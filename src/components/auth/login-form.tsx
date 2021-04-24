@@ -1,6 +1,6 @@
 import { Button, Control, Field, Input } from "rbx"
 import React, { useState, FormEvent, ChangeEvent, FC } from "react"
-import { DataClient } from "../services/data-client"
+import { DataClient } from "~/services/data-client"
 
 export const LoginForm: FC<{ redirect: string }> = ({ redirect }) => {
   const client = DataClient.useClient()
@@ -13,8 +13,6 @@ export const LoginForm: FC<{ redirect: string }> = ({ redirect }) => {
     console.log(res)
 
     if (res.error) await client.auth.signUp({ email, password })
-
-    /* if (!res.error) router.push(redirect) */
   }
 
   return (
