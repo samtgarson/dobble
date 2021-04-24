@@ -47,7 +47,7 @@ export interface LeagueEntity {
 
 export interface LeagueEntityWithMeta extends LeagueEntity {
   game_count: number
-  members: LeaguePlayer[]
+  members: LeaguePlayerEntity[]
 }
 
 export type LeagueRole = 'PLAYER' | 'ADMIN'
@@ -59,7 +59,7 @@ export interface LeagueMembershipEntity {
   role: LeagueRole
 }
 
-export type LeaguePlayer = {
+export type LeaguePlayerEntity = {
   id: string
   league_id: string
   cards_left: number

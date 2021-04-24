@@ -51,9 +51,6 @@ const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props
 
   const member = players && user && players[user.id]
 
-  const unsubscribeGame = useRef<() => void>()
-  const unsubscribePlayers = useRef<() => void>()
-
   useEffect(() => {
     setGame(props.game)
     setPlayers(props.players)
@@ -77,15 +74,15 @@ const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props
     }
 
     joinGame()
-  }, [user, game, players])
+  }, [user, game, players, member])
 
   useEffect(() => {
-    unsubscribeGame.current = client.subscribeToGame(game, setGame)
-    unsubscribePlayers.current = client.subscribeToPlayers(game.id, players, setPlayers)
+    const unsubscribeGame = client.subscribeToGame(game, setGame)
+    const unsubscribePlayers = client.subscribeToPlayers(game.id, players, setPlayers)
 
     return () => {
-      unsubscribePlayers.current && unsubscribePlayers.current()
-      unsubscribeGame.current && unsubscribeGame.current()
+      unsubscribePlayers()
+      unsubscribeGame()
     }
   }, [game.id])
 
@@ -122,6 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
 
     return { props: { game, players } }
   } catch (err) {
+    console.log(err)
     return { notFound: true }
   }
 }

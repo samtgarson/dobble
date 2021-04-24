@@ -186,12 +186,12 @@ export class DataClient {
     if (error) throw error
   }
 
-  async createAnotherGame (userId: string, gameId: string): Promise<string> {
-    const { id: next_game_id } = await this.createGame(userId)
+  async createAnotherGame (userId: string, game: GameEntityWithMeta): Promise<string> {
+    const { id: next_game_id } = await this.createGame(userId, game.league_id)
     const { error } = await this.client
       .from<GameEntity>('games')
       .update({ next_game_id }, { returning: 'minimal' })
-      .eq('id', gameId)
+      .eq('id', game.id)
 
     if (error) throw error
 
@@ -253,6 +253,7 @@ export class DataClient {
       .select('*')
       .eq('league_id', leagueId)
       .eq('state', 'OPEN')
+      .order('created_at', { ascending: false })
 
     return hydrate(data) || []
   }
@@ -302,6 +303,21 @@ export class DataClient {
 
     return () => {
       this.client.removeSubscription(sub)
+    }
+  }
+
+  async subscribeToLeagueGames (leagueId: string, update: (game: GameEntity) => void): Promise<() => void> {
+    const gamesSub = this.client.from<GameEntity>(`games:league_id:${leagueId}`)
+      .on('INSERT', async payload => {
+        update(payload.new)
+      })
+      .subscribe()
+
+    const [openGame] = await this.getOpenLeagueGames(leagueId)
+    if (openGame) update(openGame)
+
+    return () => {
+      this.client.removeSubscription(gamesSub)
     }
   }
 }

@@ -11,14 +11,14 @@ type ScoreboardProps = {
   banner?: boolean
 }
 
-export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players, banner }) => {
+export const Scoreboard: FunctionComponent<ScoreboardProps> = ({ players }) => {
   const scores = useMemo(() => Object.values(players)
     .map(p => ({ name: p.name, score: p.hand.length, id: p.id }))
     .sort((a, b) => a.score - b.score),
   [players])
 
   return (
-    <div className={cx('scoreboard', { banner })}>
+    <div className={cx('scoreboard')}>
       <ul>
         {scores.map((s, i) => (
           <li key={s.id} className={cx({ warning: s.score < 4 })}>

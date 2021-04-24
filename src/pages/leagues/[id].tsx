@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next"
 import { useRouter } from "next/router"
 import { Button, Heading } from "rbx"
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CopyButton } from "~/src/components/atoms/copy-button"
 import { LeaguePlayer } from "~/src/components/leagues/player"
 import { OpenGameButton } from "~/src/components/leagues/open-game-button"
@@ -17,9 +17,10 @@ type LeaguePageProps = {
   openGame?: GameEntity
 }
 
-const LeaguePage: NextPage<LeaguePageProps> = ({ league, openGame }) => {
+const LeaguePage: NextPage<LeaguePageProps> = ({ league }) => {
   const { user } = GlobalState.useContainer()
   const [loading, setLoading] = useState(false)
+  const [openGame, setOpenGame] = useState<GameEntity>()
   const client = DataClient.useClient()
   const router = useRouter()
 
@@ -31,6 +32,19 @@ const LeaguePage: NextPage<LeaguePageProps> = ({ league, openGame }) => {
     const newGame = await client.createGame(user.id, league.id)
     router.push(`/game/${newGame.id}`)
   }, [user])
+
+  useEffect(() => {
+    let unsubscribe: () => void
+    const subscribe = async () => {
+      unsubscribe = await client.subscribeToLeagueGames(league.id, setOpenGame)
+    }
+
+    subscribe()
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [league.id])
 
   return (
     <Wrapper>
@@ -46,7 +60,7 @@ const LeaguePage: NextPage<LeaguePageProps> = ({ league, openGame }) => {
       </Button.Group>
       <Heading className="mb-3" size={6}>Players</Heading>
       <ol>
-        { league.members.map((m, i) => <LeagueItem key={m.id} {...{ m, i }} />) }
+        { league.members.map((m, i) => <LeaguePlayer key={m.id} {...{ m, i }} />) }
       </ol>
     </Wrapper>
   )
@@ -61,11 +75,9 @@ export const getServerSideProps: GetServerSideProps<LeaguePageProps> = async ({ 
 
   const leagueId = query.id as string
   const league = await client.getLeague(leagueId)
-  console.log(user, league)
   if (!league || !league.members.find(m => m.user.id == user.id)) return { notFound: true }
 
-  const [openGame] = await client.getOpenLeagueGames(leagueId)
-  return { props: { league, openGame } }
+  return { props: { league } }
 }
 
 export default LeaguePage

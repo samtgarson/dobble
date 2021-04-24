@@ -1,26 +1,26 @@
-.scoreboard.banner {
+.scoreboard {
   padding: 5px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   color: white;
+
+  ul {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 3px;
+  }
+
+  li {
+    flex: 0 0 auto;
+    margin-left: 8px;
+    padding: 3px 12px 3px 8px;
+    transition: color .2s ease, background-color .2s ease;
+  }
 }
 
-.banner ul {
-  flex: 0 1 auto;
-  display: flex;
-  justify-content: flex-start;
-  padding-bottom: 3px;
-}
-
-.banner li {
-  flex: 0 0 auto;
-  margin-left: 8px;
-  padding: 3px 12px 3px 8px;
-  transition: color .2s ease, background-color .2s ease;
-}
-
-.banner .warning {
+.warning {
   border-radius: 20px;
   background: white;
   color: red;
@@ -33,21 +33,12 @@
   transition: color .2s ease;
 }
 
-.banner .name {
+.name {
   margin: 0 4px 0 2px;
   color: white;
 }
 
-.banner .warning .name {
+.warning .name {
   color: red;
-}
-
-.scoreboard:not(.banner) .medal {
-  display: inline-block;
-  width: 24px;
-}
-
-.scoreboard:not(.banner) li {
-  margin-bottom: 10px;
 }
 
