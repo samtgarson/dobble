@@ -153,7 +153,7 @@ export class DataClient {
   async getGame (gameId: string): Promise<GameEntityWithMeta | undefined> {
     const { data, error } = await this.client
       .from<GameEntityWithMeta>('games_with_meta')
-      .select('*')
+      .select('*,players!game_id(*)')
       .eq('id', gameId)
       .eq('players.game_id' as keyof GameEntityWithMeta, gameId)
       .single()

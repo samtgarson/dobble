@@ -14,10 +14,6 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     <GlobalState.Provider>
       <Head>
         <title>Dobble</title>
-          <link
-          rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;600&display=swap"
-          />
           <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <NavBar />

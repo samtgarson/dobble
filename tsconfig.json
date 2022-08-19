@@ -18,11 +18,18 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "typeRoots": ["node_modules/@types", "types/stubs"],
+    "typeRoots": [
+      "node_modules/@types",
+      "types/stubs"
+    ],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*", "./src/*"]
-    }
+      "~/*": [
+        "./*",
+        "./src/*"
+      ]
+    },
+    "incremental": true
   },
   "exclude": [
     "node_modules"
