@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start --port 5000",
     "lint": "eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .",
+    "format": "prettier --write . --ignore-path .gitignore; npm run lint -- --fix",
     "test": "jest"
   },
   "dependencies": {
@@ -18,7 +19,7 @@
     "consola": "^2.15.3",
     "date-fns": "^2.29.2",
     "fathom-client": "^3.5.0",
-    "framer-motion": "^4.0.3",
+    "framer-motion": "^7.2.0",
     "next": "^12.2.5",
     "next-compose-plugins": "^2.2.1",
     "rbx": "^2.2.0",
@@ -47,6 +48,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^28.1.3",
     "next-superjson-plugin": "^0.3.0",
+    "prettier": "^2.7.1",
     "sass": "^1.54.4",
     "ts-jest": "^28.0.8",
     "typescript": "^4.7.4"
@@ -58,9 +60,10 @@
       }
     },
     "extends": [
-      "plugin:react/recommended",
       "@samtgarson/eslint-config",
-      "@samtgarson/eslint-config/typescript"
+      "@samtgarson/eslint-config/typescript",
+      "@samtgarson/eslint-config/react",
+      "plugin:react/jsx-runtime"
     ],
     "rules": {
       "@typescript-eslint/no-non-null-assertion": 0,
@@ -83,7 +86,8 @@
           "scss": "always",
           "json": "always"
         }
-      ]
+      ],
+      "react-hooks/exhaustive-deps": "warn"
     }
   },
   "jest": {
@@ -114,12 +118,5 @@
       }
     }
   },
-  "babel": {
-    "presets": [
-      "next/babel"
-    ],
-    "plugins": [
-      "superjson-next"
-    ]
-  }
+  "prettier": "@samtgarson/eslint-config/prettier"
 }

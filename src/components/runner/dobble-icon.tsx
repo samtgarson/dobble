@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useMemo, useCallback } from "react"
-import Symbols from '~/util/cards/symbols.json'
+import cn from 'classnames/bind'
+import { FunctionComponent, useCallback, useMemo } from 'react'
 import styles from '~/styles/components/dobble-icon.module.scss'
-import cn from "classnames/bind"
+import Symbols from '~/util/cards/symbols.json'
 
 const cx = cn.bind(styles)
 
@@ -14,24 +14,24 @@ type DobbleIconProps = {
 
 const r = (n: number) => `rotate(${n}deg)`
 
-const generateSeed = (min: number, max: number) => (
-  Math.random() * (max - min) +min
-)
+const generateSeed = (min: number, max: number) =>
+  Math.random() * (max - min) + min
 
-export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, cardIndex, handleChoice, small }) => {
+export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({
+  symbolIndex,
+  cardIndex,
+  handleChoice,
+  small
+}) => {
   const { angle, h, angleSeed, sizeSeed } = useMemo(() => {
     // create two rows
     const inner = cardIndex < 3
 
     // distance from center (inner and outer)
-    const h = small
-      ? inner ? 24 : 43
-      : inner ? 26 : 48
+    const h = small ? (inner ? 24 : 43) : inner ? 26 : 48
 
     // pseudo-random looking spread
-    const angle = inner
-      ? 40 + 120 * cardIndex
-      : 20 + 72 * (cardIndex - 3)
+    const angle = inner ? 40 + 120 * cardIndex : 20 + 72 * (cardIndex - 3)
 
     // create two random numbers
     const sizeSeed = inner
@@ -39,9 +39,12 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
       : generateSeed(0.8, 1.1) // (and outer ring should be bigger)
     const angleSeed = generateSeed(0.2, 1.8) // angle can vary a lot
     return { angle, h, angleSeed, sizeSeed }
-  }, [cardIndex])
+  }, [cardIndex, small])
 
-  const TagName = useMemo(() => handleChoice ? 'button' : 'span', [handleChoice])
+  const TagName = useMemo(
+    () => (handleChoice ? 'button' : 'span'),
+    [handleChoice]
+  )
   const onClick = useCallback(async () => {
     if (!handleChoice) return
     await handleChoice()
@@ -59,9 +62,14 @@ export const DobbleIcon: FunctionComponent<DobbleIconProps> = ({ symbolIndex, ca
           transform: `${r(angle)}`
         }}
       >
-        <TagName className={styles[TagName]} style={{
-          transform: `${r(angleSeed * -angle)} scale(${sizeSeed})`
-        }}>{Symbols[symbolIndex]}</TagName>
+        <TagName
+          className={styles[TagName]}
+          style={{
+            transform: `${r(angleSeed * -angle)} scale(${sizeSeed})`
+          }}
+        >
+          {Symbols[symbolIndex]}
+        </TagName>
       </span>
     </>
   )

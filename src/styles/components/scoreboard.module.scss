@@ -16,7 +16,7 @@
     flex: 0 0 auto;
     margin-left: 8px;
     padding: 3px 12px 3px 8px;
-    transition: color .2s ease, background-color .2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 }
 
@@ -24,13 +24,13 @@
   border-radius: 20px;
   background: white;
   color: red;
-  animation: shake .5s linear;
+  animation: shake 0.5s linear;
 }
 
 .name {
   font-weight: bold;
   margin: 0 4px;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
 }
 
 .name {
@@ -41,4 +41,3 @@
 .warning .name {
   color: red;
 }
-

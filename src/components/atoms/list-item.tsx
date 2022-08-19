@@ -1,6 +1,5 @@
-import { motion } from "framer-motion"
-import React, { FC } from "react"
-
+import { motion } from 'framer-motion'
+import { FC } from 'react'
 
 type ListItemProps = {
   id: string
@@ -10,11 +9,11 @@ type ListItemProps = {
 
 export const ListItem: FC<ListItemProps> = ({ id, content, label }) => (
   <motion.li
-    className="is-flex is-justify-content-space-between is-align-items-center mb-3"
+    className='is-flex is-justify-content-space-between is-align-items-center mb-3'
     layout
     layoutId={id}
   >
-    <span>{ content }</span>
-    <span>{ label }</span>
+    <span>{content}</span>
+    <span>{label}</span>
   </motion.li>
 )

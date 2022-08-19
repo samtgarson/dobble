@@ -4,11 +4,11 @@ type Deps = Record<string, unknown | undefined>
 
 const allArePresent = <Hsh extends Deps>(hsh?: Hsh): hsh is Required<Hsh> => {
   if (!hsh) return false
-  return Object.values(hsh).every(i => typeof i !== 'undefined' && i !== null)
+  return Object.values(hsh).every((i) => typeof i !== 'undefined' && i !== null)
 }
 
-export function useAsyncFetch<T, D extends Deps> (
-  fetcher: (deps: Required<D>) => (Promise<T> | undefined),
+export function useAsyncFetch<T, D extends Deps>(
+  fetcher: (deps: Required<D>) => Promise<T> | undefined,
   done: (data: T) => void,
   errorHandler?: ((error: Error) => void) | null,
   dependencies?: D
@@ -25,11 +25,13 @@ export function useAsyncFetch<T, D extends Deps> (
         const data = await fetcher(dependencies)
         if (mounted && data) done(data)
       } catch (error) {
-        handleError(error)
+        handleError(error as Error)
       }
     }
 
     run()
-    return () => { mounted = false }
+    return () => {
+      mounted = false
+    }
   }, Object.values(dependencies ?? []))
 }

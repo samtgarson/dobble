@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { Section } from "rbx"
-import React, { FunctionComponent } from "react"
 import cn from 'classnames'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Section } from 'rbx'
+import { FunctionComponent } from 'react'
 import styles from 'src/styles/components/wrapper.module.scss'
 
 const variants = {
@@ -15,9 +15,15 @@ const transition = {
   duration: 0.4
 }
 
-export const Wrapper: FunctionComponent<{ className?: string, featured?: boolean }> = ({ children, className, featured }) => (
+export const Wrapper: FunctionComponent<{
+  children: React.ReactNode
+  className?: string
+  featured?: boolean
+}> = ({ children, className, featured }) => (
   <AnimatePresence>
-    <Section className={cn(styles.section, className, { [styles.featured]: featured })}>
+    <Section
+      className={cn(styles.section, className, { [styles.featured]: featured })}
+    >
       <motion.div
         layout
         className={cn('container', styles.container)}
@@ -27,7 +33,7 @@ export const Wrapper: FunctionComponent<{ className?: string, featured?: boolean
         animate='visible'
         exit='exit'
       >
-        { children }
+        {children}
       </motion.div>
     </Section>
   </AnimatePresence>

@@ -8,7 +8,7 @@ describe('Dealer', () => {
     result = dealer.run()
   })
 
-  it ('leaves one card in the stack', () => {
+  it('leaves one card in the stack', () => {
     expect(result.firstCard).toBeInstanceOf(Array)
   })
 

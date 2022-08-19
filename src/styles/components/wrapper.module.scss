@@ -11,21 +11,20 @@ section.featured {
     background: var(--pink);
   }
 
-  &, * {
+  &,
+  * {
     color: white;
   }
 }
-
 
 .container {
   padding: 20px;
   max-width: 550px !important;
   border-radius: 10px;
   background: white;
-  box-shadow:  10px 10px 30px #5200b8;
+  box-shadow: 10px 10px 30px #5200b8;
 
   @include mobile {
     padding: 10px;
   }
 }
-

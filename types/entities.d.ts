@@ -67,5 +67,3 @@ export type LeaguePlayerEntity = {
   membership: LeagueMembershipEntity
   user: User
 }
-
-

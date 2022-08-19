@@ -1,8 +1,8 @@
-import { NextPage } from "next"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { DataClient } from "../services/data-client"
-import { GlobalState } from "../services/state"
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { DataClient } from '../services/data-client'
+import { GlobalState } from '../services/state'
 
 const LogOut: NextPage = () => {
   const { dispatch } = GlobalState.useContainer()

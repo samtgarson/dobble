@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   max-height: 90vw;
-  transition: transform .2s ease;
+  transition: transform 0.2s ease;
   width: 100%;
   height: 100%;
   margin: 20px auto;
@@ -31,13 +31,10 @@
   display: block;
   margin: 0 auto;
 
-  -webkit-filter:
-    drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
+  -webkit-filter: drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
     drop-shadow(0 0 1px rgba(10, 10, 10, 0.2));
-  filter:
-    drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
+  filter: drop-shadow(0px 3px 9px rgba(10, 10, 10, 0.2))
     drop-shadow(0 0 1px rgba(10, 10, 10, 0.2));
-
 }
 
 .card-front,
@@ -55,7 +52,7 @@
 .card-front {
   z-index: 1;
   transform: translateX(-50%) rotateZ(var(--rotateZ, 0));
-  transition: transform .2s ease-out;
+  transition: transform 0.2s ease-out;
 }
 
 .card-back {
@@ -72,11 +69,10 @@
     width: 100%;
     text-align: center;
     transform: translateY(-50%);
-    z-index: 1
+    z-index: 1;
   }
 }
 
 .small .card-back {
   transform: rotateY(180deg);
 }
-

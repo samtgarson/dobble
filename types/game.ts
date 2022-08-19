@@ -1,4 +1,4 @@
-import { User } from "./api"
+import { User } from './api'
 
 export type Card = number[]
 

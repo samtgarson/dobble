@@ -1,28 +1,44 @@
-import { Label, Field, Control, Input, Button } from "rbx"
-import React, { ChangeEvent, FC } from "react"
+import { Button, Control, Field, Input, Label } from 'rbx'
+import { ChangeEvent, FC } from 'react'
 import { fi } from '~/util'
 
 type QuickGameFormProps = {
   code: string
   loading: boolean
-  goToGame (): void
-  setCode (code: string): void
-  createGame (): void
+  goToGame(): void
+  setCode(code: string): void
+  createGame(): void
   err?: Error
 }
 
-export const QuickGameForm: FC<QuickGameFormProps> = ({ code, goToGame, loading, setCode, createGame, err }) => (
+export const QuickGameForm: FC<QuickGameFormProps> = ({
+  code,
+  goToGame,
+  loading,
+  setCode,
+  createGame,
+  err
+}) => (
   <>
-    <form action={`/game/${code}`} className="mb-5" onSubmit={e => { e.preventDefault(); goToGame() }}>
+    <form
+      action={`/game/${code}`}
+      className='mb-5'
+      onSubmit={(e) => {
+        e.preventDefault()
+        goToGame()
+      }}
+    >
       <Label>Already got a game code?</Label>
-      <Field kind="group">
+      <Field kind='group'>
         <Control expanded>
           <Input
-            type="text"
+            type='text'
             disabled={loading}
-            placeholder="Your game code"
+            placeholder='Your game code'
             value={code}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setCode(e.target.value)
+            }
           />
         </Control>
         <Control>
@@ -30,11 +46,17 @@ export const QuickGameForm: FC<QuickGameFormProps> = ({ code, goToGame, loading,
         </Control>
       </Field>
     </form>
-    <div className="begin-option">
+    <div className='begin-option'>
       <Field>
         <Label>Or create a quick game</Label>
-        <Button color="success" onClick={createGame} state={fi(loading, 'loading')}>Play now</Button>
-        { err && <p>{ err.message }</p> }
+        <Button
+          color='success'
+          onClick={createGame}
+          state={fi(loading, 'loading')}
+        >
+          Play now
+        </Button>
+        {err && <p>{err.message}</p>}
       </Field>
     </div>
   </>

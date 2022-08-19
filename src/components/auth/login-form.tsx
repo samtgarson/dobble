@@ -1,6 +1,6 @@
-import { Button, Control, Field, Input } from "rbx"
-import React, { useState, FormEvent, ChangeEvent, FC } from "react"
-import { DataClient } from "~/services/data-client"
+import { Button, Control, Field, Input } from 'rbx'
+import { ChangeEvent, FC, FormEvent, useState } from 'react'
+import { DataClient } from '~/services/data-client'
 
 export const LoginForm: FC<{ redirect: string }> = ({ redirect }) => {
   const client = DataClient.useClient()
@@ -9,7 +9,10 @@ export const LoginForm: FC<{ redirect: string }> = ({ redirect }) => {
 
   const login = async (evt: FormEvent) => {
     evt.preventDefault()
-    const res = await client.auth.signIn({ email, password }, { redirectTo: redirect })
+    const res = await client.auth.signIn(
+      { email, password },
+      { redirectTo: redirect }
+    )
     console.log(res)
 
     if (res.error) await client.auth.signUp({ email, password })
@@ -17,27 +20,35 @@ export const LoginForm: FC<{ redirect: string }> = ({ redirect }) => {
 
   return (
     <form onSubmit={login}>
-      <p className="mb-3">Or, use an email and password</p>
+      <p className='mb-3'>Or, use an email and password</p>
       <Field horizontal>
         <Field.Body>
-          <Field><Control>
-            <Input
-              name="email"
-              type="email"
-              value={email}
-              onChange={(evt: ChangeEvent<HTMLInputElement>) => setEmail(evt.target.value)}
-              placeholder="Email"
-            />
-          </Control></Field>
-          <Field><Control>
-            <Input
-              name="password"
-              type="password"
-              value={password}
-              onChange={(evt: ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value)}
-              placeholder="Password"
-            />
-          </Control></Field>
+          <Field>
+            <Control>
+              <Input
+                name='email'
+                type='email'
+                value={email}
+                onChange={(evt: ChangeEvent<HTMLInputElement>) =>
+                  setEmail(evt.target.value)
+                }
+                placeholder='Email'
+              />
+            </Control>
+          </Field>
+          <Field>
+            <Control>
+              <Input
+                name='password'
+                type='password'
+                value={password}
+                onChange={(evt: ChangeEvent<HTMLInputElement>) =>
+                  setPassword(evt.target.value)
+                }
+                placeholder='Password'
+              />
+            </Control>
+          </Field>
           <Button>Go</Button>
         </Field.Body>
       </Field>

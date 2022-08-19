@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useState } from "react"
 import { Button } from 'rbx'
+import { FC, useCallback, useState } from 'react'
 
 type CopyButtonProps = {
   label: string
@@ -7,7 +7,11 @@ type CopyButtonProps = {
   title?: string
 }
 
-export const CopyButton: FC<CopyButtonProps> = ({ label, path, title = 'Dobble' }) => {
+export const CopyButton: FC<CopyButtonProps> = ({
+  label,
+  path,
+  title = 'Dobble'
+}) => {
   const [copied, setCopied] = useState(false)
 
   const copyCode = useCallback(() => {
@@ -15,7 +19,11 @@ export const CopyButton: FC<CopyButtonProps> = ({ label, path, title = 'Dobble' 
     const url = new URL(path ?? location.pathname, location.href).toString()
 
     if (navigator['share'] !== undefined) {
-      navigator.share({ title, url }).catch(() => {})
+      try {
+        navigator.share({ title, url })
+      } catch (e) {
+        console.error(e)
+      }
     } else {
       navigator.clipboard.writeText(url)
       setCopied(true)
@@ -23,13 +31,14 @@ export const CopyButton: FC<CopyButtonProps> = ({ label, path, title = 'Dobble' 
       setTimeout(() => mounted && setCopied(false), 1000)
     }
 
-    return () => mounted = false
+    return () => (mounted = false)
   }, [path, title])
 
   return (
-    <Button size='small' color="light" onClick={copyCode}>{ copied
-      ? '✅ Copied'
-      : `📝 ${'share' in navigator ? `Share ${label}` : `Copy ${label}`}`
-    }</Button>
+    <Button size='small' color='light' onClick={copyCode}>
+      {copied
+        ? '✅ Copied'
+        : `📝 ${'share' in navigator ? `Share ${label}` : `Copy ${label}`}`}
+    </Button>
   )
 }

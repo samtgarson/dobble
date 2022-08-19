@@ -1,13 +1,13 @@
 import { GetServerSideProps, NextPage } from 'next'
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'
+import { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { Wrapper } from '~/components/atoms/wrapper'
 import PreGame from '~/components/game/pre-game'
 import Runner from '~/components/runner'
-import { Wrapper } from '~/components/atoms/wrapper'
+import { DataClient } from '~/services/data-client'
 import { GlobalState } from '~/services/state'
 import { FinishedGame } from '~/src/components/game/finished-game'
 import { Scoreboard } from '~/src/components/runner/scoreboard'
-import { DataClient } from '~/services/data-client'
 import { User } from '~/types/api'
 import { GameEntityWithMeta, Players } from '~/types/entities'
 import { Player } from '~/types/game'
@@ -17,10 +17,15 @@ type RenderGameProps = {
   game: GameEntityWithMeta
   user: User
   players: Players
-  reload (): void
+  reload(): void
 }
 
-const RenderGame: FunctionComponent<RenderGameProps> = ({ game, players, user, reload }) => {
+const RenderGame: FunctionComponent<RenderGameProps> = ({
+  game,
+  players,
+  user,
+  reload
+}) => {
   switch (game.state) {
     case 'OPEN':
       return <PreGame user={user} game={game} players={players} />
@@ -41,7 +46,9 @@ const RenderGame: FunctionComponent<RenderGameProps> = ({ game, players, user, r
   }
 }
 
-const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props => {
+const GamePage: NextPage<{ game: GameEntityWithMeta; players: Players }> = (
+  props
+) => {
   const { user } = GlobalState.useContainer()
   const client = DataClient.useClient()
 
@@ -78,7 +85,11 @@ const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props
 
   useEffect(() => {
     const unsubscribeGame = client.subscribeToGame(game, setGame)
-    const unsubscribePlayers = client.subscribeToPlayers(game.id, players, setPlayers)
+    const unsubscribePlayers = client.subscribeToPlayers(
+      game.id,
+      players,
+      setPlayers
+    )
 
     return () => {
       unsubscribePlayers()
@@ -102,8 +113,11 @@ const GamePage: NextPage<{ game: GameEntityWithMeta, players: Players }> = props
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-  const client = DataClient.useClient()
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query
+}) => {
+  const client = new DataClient()
   const id = query.code as string
 
   try {
@@ -113,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
 
     if (game.league) {
       const user = await client.getUserFromCookie(req)
-      const leagueIds = game.league.members.map(m => m.user.id)
+      const leagueIds = game.league.members.map((m) => m.user.id)
       if (!user || !leagueIds.includes(user.id)) return { notFound: true }
     }
 

@@ -1,6 +1,6 @@
 import cn from 'classnames/bind'
 import { motion, Variants } from 'framer-motion'
-import React, { CSSProperties, FunctionComponent, useMemo } from 'react'
+import { CSSProperties, FunctionComponent, useMemo } from 'react'
 import styles from '~/styles/components/dobble-card.module.scss'
 import { Card } from '~/types/game'
 import { fi } from '~/util'
@@ -33,7 +33,14 @@ const variants = (faceUp: boolean, small?: boolean): Variants => ({
   }
 })
 
-export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = false, small, backText, handleChoice, rotate: rotateZ = 0 }) => {
+export const DobbleCard: FunctionComponent<DobbleCardProps> = ({
+  card,
+  faceUp = false,
+  small,
+  backText,
+  handleChoice,
+  rotate: rotateZ = 0
+}) => {
   const prefix = useMemo(() => card.join('-'), [card])
 
   return (
@@ -41,41 +48,46 @@ export const DobbleCard: FunctionComponent<DobbleCardProps> = ({ card, faceUp = 
       key={prefix}
       variants={variants(faceUp, small)}
       initial='initial'
-      animate={ faceUp ? 'animate' : 'initial' }
+      animate={faceUp ? 'animate' : 'initial'}
       exit='exit'
-      className={cx('card-wrapper', { small }) }
+      className={cx('card-wrapper', { small })}
       transition={{ type: 'tween', ease: 'easeInOut', duration: 0.1 }}
     >
-      <div style={{ '--rotateZ': `${rotateZ}deg` } as CSSProperties} className={ cx('card-front') }>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          height="10"
-          width="10"
-          viewBox="0 0 10 10"
+      <div
+        style={{ '--rotateZ': `${rotateZ}deg` } as CSSProperties}
+        className={cx('card-front')}
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='10'
+          width='10'
+          viewBox='0 0 10 10'
           className={styles.svg}
         >
-          <circle fill="white" cx="5" cy="5" r="5" />
+          <circle fill='white' cx='5' cy='5' r='5' />
         </svg>
-          { card.map((index, i) => (
-            <DobbleIcon
-              small={small}
-              key={`${prefix}-${index}`}
-              symbolIndex={index}
-              cardIndex={i}
-              handleChoice={fi(handleChoice, () => handleChoice!(index))}
-            />
-          )) }
-        </div>
-        <div className={ cx('card-back') }>
-          <span>{ backText || 'Dobble!' }</span>
-          <svg xmlns="http://www.w3.org/2000/svg"
-            height="10"
-            width="10"
-            viewBox="0 0 10 10"
-            className={styles.svg}
-          >
-            <circle fill="var(--pink)" cx="5" cy="5" r="5" />
-          </svg>
-        </div>
+        {card.map((index, i) => (
+          <DobbleIcon
+            small={small}
+            key={`${prefix}-${index}`}
+            symbolIndex={index}
+            cardIndex={i}
+            handleChoice={fi(handleChoice, () => handleChoice!(index))}
+          />
+        ))}
+      </div>
+      <div className={cx('card-back')}>
+        <span>{backText || 'Dobble!'}</span>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='10'
+          width='10'
+          viewBox='0 0 10 10'
+          className={styles.svg}
+        >
+          <circle fill='var(--pink)' cx='5' cy='5' r='5' />
+        </svg>
+      </div>
     </motion.div>
   )
 }

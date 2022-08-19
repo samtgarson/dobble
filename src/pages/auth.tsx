@@ -1,7 +1,7 @@
-import { GetServerSideProps, NextPage } from "next"
-import { useEffect } from "react"
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { GlobalState } from "../services/state"
+import { useEffect } from 'react'
+import { GlobalState } from '../services/state'
 
 const Auth: NextPage<{ redirect: string }> = ({ redirect }) => {
   const router = useRouter()
@@ -14,6 +14,8 @@ const Auth: NextPage<{ redirect: string }> = ({ redirect }) => {
   return null
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query: { redirect = '/' } }) => ({ props: { redirect } })
+export const getServerSideProps: GetServerSideProps = async ({
+  query: { redirect = '/' }
+}) => ({ props: { redirect } })
 
 export default Auth

@@ -1,8 +1,8 @@
 @charset "utf-8";
-@import "https://fonts.googleapis.com/css2?family=Manrope:wght@300;600&display=swap";
+@import 'https://fonts.googleapis.com/css2?family=Manrope:wght@300;600&display=swap';
 
 $purple: #6600ff;
-$pink: #FF008C;
+$pink: #ff008c;
 
 $primary: $purple;
 $link: $purple;
@@ -15,9 +15,10 @@ $body-overflow-y: auto;
   --pink: #{$pink};
 }
 
-@import "~bulma/bulma.sass";
+@import '~bulma/bulma.sass';
 
-body, html {
+body,
+html {
   min-height: 100vh;
   min-height: -webkit-max-available;
   background-color: var(--purple);
@@ -32,20 +33,23 @@ body, html {
 }
 
 @keyframes shake {
-  8%, 41% {
-      transform: translateX(-10px);
+  8%,
+  41% {
+    transform: translateX(-10px);
   }
-  25%, 58% {
-      transform: translateX(10px);
+  25%,
+  58% {
+    transform: translateX(10px);
   }
   75% {
-      transform: translateX(-5px);
+    transform: translateX(-5px);
   }
   92% {
-      transform: translateX(5px);
+    transform: translateX(5px);
   }
-  0%, 100% {
-      transform: translateX(0);
+  0%,
+  100% {
+    transform: translateX(0);
   }
 }
 
